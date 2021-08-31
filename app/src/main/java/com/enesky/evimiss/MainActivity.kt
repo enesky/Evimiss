@@ -12,7 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.ui.theme.EvimissTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +52,6 @@ fun HomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Welcome to the Evimiss")
+        Text(text = "Welcome to the Evimiss", textDecoration = TextDecoration.Underline, fontSize = 16.sp)
     }
 }
