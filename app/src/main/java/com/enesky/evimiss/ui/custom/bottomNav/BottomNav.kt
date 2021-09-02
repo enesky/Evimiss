@@ -36,10 +36,11 @@ fun BottomNavigationBar(navController: NavController? = null) {
         screens.forEach { screen ->
             val isSelected = currentRoute == screen.route
             BottomNavigationItem(
-                icon = { BottomNavItem(screen = screen, isSelected = isSelected) },
+                icon = { Icon(painter = painterResource(id = screen.icon), contentDescription = screen.title) },
+                label = { Text(text = screen.title, style = MaterialTheme.typography.caption, textAlign = TextAlign.Center)},
                 selectedContentColor = secondaryLight,
                 unselectedContentColor = secondary,
-                alwaysShowLabel = true,
+                alwaysShowLabel = false,
                 selected = isSelected,
                 onClick = {
                     navController?.navigate(screen.route) {
@@ -52,24 +53,6 @@ fun BottomNavigationBar(navController: NavController? = null) {
                 }
             )
         }
-    }
-}
-
-@Composable
-fun BottomNavItem(screen: BottomNavItem, isSelected: Boolean) {
-    Column(
-        horizontalAlignment = CenterHorizontally
-    ) {
-        Icon(
-            painter = painterResource(id = screen.icon),
-            contentDescription = screen.title
-        )
-        if (isSelected)
-            Text(
-                text = screen.title,
-                style = MaterialTheme.typography.caption,
-                textAlign = TextAlign.Center
-                )
     }
 }
 
