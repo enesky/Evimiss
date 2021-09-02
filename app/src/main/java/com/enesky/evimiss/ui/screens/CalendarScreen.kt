@@ -4,11 +4,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.enesky.evimiss.main.MainScaffold
+import com.enesky.evimiss.ui.theme.secondary
+import com.enesky.evimiss.ui.theme.white
 
 @Composable
 fun CalendarScreen() {
@@ -30,26 +34,34 @@ fun CalendarScreen() {
             Text(
                 text = "Hello",
                 modifier = Modifier.padding(bottom = 8.dp),
-                style = typography.h5
+                style = typography.h5,
+                color = white
             )
             if (name.isNotEmpty())
                 Text(
                     text = " $name !",
                     modifier = Modifier.padding(bottom = 8.dp),
-                    style = typography.h5
+                    style = typography.h5,
+                    color = white
                 )
         }
         Text(
             text = "Welcome to the Evimiss",
             modifier = Modifier.padding(bottom = 8.dp),
-            style = typography.body1
+            style = typography.body1,
+            color = white
         )
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
             label = { Text("") },
             placeholder = { Text("Enter your name") },
-            textStyle = typography.body1
+            textStyle = typography.body1,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = secondary,
+                textColor = white
+            )
+
         )
     }
 }
@@ -58,5 +70,7 @@ fun CalendarScreen() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    CalendarScreen()
+    MainScaffold(
+        content = { CalendarScreen() }
+    )
 }
