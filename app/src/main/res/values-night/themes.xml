@@ -4,4 +4,13 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/primaryDark</item>
         <item name="android:navigationBarColor">@color/primaryDark</item>
     </style>
+
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/primaryDark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primaryDark</item>
+        <item name="android:navigationBarColor">@color/primaryDark</item>
+    </style>
+
 </resources>

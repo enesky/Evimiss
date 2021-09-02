@@ -1,14 +1,15 @@
 package com.enesky.evimiss.ui.custom.bottomNav
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.enesky.evimiss.ui.theme.primaryDark
@@ -17,7 +18,7 @@ import com.enesky.evimiss.ui.theme.secondaryLight
 
 @Composable
 fun BottomNavigationBar(navController: NavController? = null) {
-    val items = listOf(
+    val screens = listOf(
         BottomNavItem.Notes,
         BottomNavItem.Calendar,
         BottomNavItem.More
@@ -32,20 +33,18 @@ fun BottomNavigationBar(navController: NavController? = null) {
                            } else
                                null
 
-        items.forEach { item ->
+        screens.forEach { screen ->
+            val isSelected = currentRoute == screen.route
             BottomNavigationItem(
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                label = { Text(text = item.title) },
+                icon = { BottomNavItem(screen = screen, isSelected = isSelected) },
                 selectedContentColor = secondaryLight,
                 unselectedContentColor = secondary,
                 alwaysShowLabel = true,
-                selected = currentRoute == item.route,
+                selected = isSelected,
                 onClick = {
-                    navController?.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
+                    navController?.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
                         launchSingleTop = true
                         restoreState = true
@@ -53,6 +52,24 @@ fun BottomNavigationBar(navController: NavController? = null) {
                 }
             )
         }
+    }
+}
+
+@Composable
+fun BottomNavItem(screen: BottomNavItem, isSelected: Boolean) {
+    Column(
+        horizontalAlignment = CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(id = screen.icon),
+            contentDescription = screen.title
+        )
+        if (isSelected)
+            Text(
+                text = screen.title,
+                style = MaterialTheme.typography.caption,
+                textAlign = TextAlign.Center
+                )
     }
 }
 

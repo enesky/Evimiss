@@ -4,8 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4036458333333333" />
+        <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/drawable/ic_apps.xml" value="0.23177083333333334" />
         <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/drawable/ic_launcher_background.xml" value="0.4036458333333333" />
+        <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.31927083333333334" />
+        <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/drawable/splash_background.xml" value="0.23177083333333334" />
         <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.23541666666666666" />
+        <entry key="..\:/Users/nskml/Documents/StudioProjects/Evimiss/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.23541666666666666" />
       </map>
     </option>
   </component>

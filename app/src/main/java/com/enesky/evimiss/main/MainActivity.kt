@@ -9,9 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.enesky.evimiss.ui.custom.bottomNav.BottomNavigationBar
-import com.enesky.evimiss.ui.screens.CalendarScreen
+import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
+import com.enesky.evimiss.ui.screens.SplashScreen
+import com.enesky.evimiss.ui.screens.calendar.CalendarViewModel
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.primary
 
@@ -19,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Main()
+            NavigationFromSplash()
         }
     }
 }
@@ -50,6 +54,15 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
 @Composable
 fun MainPreview() {
     MainScaffold(
-        content = { CalendarScreen() }
+        content = { CalendarScreen(calendarViewModel = CalendarViewModel()) }
     )
+}
+
+@Composable
+fun NavigationFromSplash() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "splash") {
+        composable("splash") { SplashScreen(navController = navController) }
+        composable("main") { Main() }
+    }
 }

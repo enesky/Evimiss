@@ -10,6 +10,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/primaryDark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primaryDark</item>
+        <item name="android:navigationBarColor">@color/primaryDark</item>
+    </style>
+
     <style name="Theme.Evimiss.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Evimiss.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
