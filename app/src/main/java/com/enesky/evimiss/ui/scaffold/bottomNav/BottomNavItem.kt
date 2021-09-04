@@ -1,4 +1,4 @@
-package com.enesky.evimiss.ui.custom.bottomNav
+package com.enesky.evimiss.ui.scaffold.bottomNav
 
 import com.enesky.evimiss.R
 

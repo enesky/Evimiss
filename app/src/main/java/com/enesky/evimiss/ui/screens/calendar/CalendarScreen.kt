@@ -24,7 +24,6 @@ fun CalendarScreen(calendarViewModel: CalendarViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         //var name by remember { mutableStateOf("") }
         val name: String by calendarViewModel.name.observeAsState(initial = "")
 

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.enesky.evimiss.ui.custom.bottomNav.BottomNavItem
+import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNavItem
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.screens.MoreScreen
 import com.enesky.evimiss.ui.screens.NotesScreen
