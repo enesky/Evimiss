@@ -1,22 +1,26 @@
 package com.enesky.evimiss.ui.custom.calendar
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.secondary
 
 /**
@@ -29,22 +33,53 @@ fun MyCalendar() {
 }
 
 @Composable
+fun calHeader() {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            modifier = Modifier
+                .weight(1F)
+                .size(32.dp)
+                .clickable { /* Todo: */ },
+            painter = painterResource(id = R.drawable.ic_arrow_left),
+            contentDescription = "swipeLeft"
+        )
+        Text(
+            modifier = Modifier.weight(5F),
+            text = "Eylül",
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            style = MaterialTheme.typography.h6
+        )
+        Image(
+            modifier = Modifier
+                .weight(1F)
+                .size(32.dp)
+                .clickable { /* Todo: */ },
+            painter = painterResource(id = R.drawable.ic_arrow_right),
+            contentDescription = "swipeRight"
+        )
+    }
+}
+
+@Composable
 fun calMonth() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        val weekNumbers1  = listOf(29,30,1,2,3,4,5)
-        val weekNumbers2  = listOf(6,7,8,9,10,11,12)
-        val weekNumbers3  = listOf(13,14,15,16,17,18,19)
-        val weekNumbers4  = listOf(20,21,22,23,24,25,26)
-        val weekNumbers5  = listOf(27,28,29,30,31,1,2)
-        calWeeks(weekNumbers = weekNumbers1)
-        calWeeks(weekNumbers = weekNumbers2)
-        calWeeks(weekNumbers = weekNumbers3)
-        calWeeks(weekNumbers = weekNumbers4)
-        calWeeks(weekNumbers = weekNumbers5)
+        Spacer(modifier = Modifier.size(8.dp))
+        calHeader()
+        Spacer(modifier = Modifier.size(8.dp))
+        calWeeks(weekNumbers = listOf(29, 30, 1, 2, 3, 4, 5))
+        calWeeks(weekNumbers = listOf(6, 7, 8, 9, 10, 11, 12))
+        calWeeks(weekNumbers = listOf(13, 14, 15, 16, 17, 18, 19))
+        calWeeks(weekNumbers = listOf(20, 21, 22, 23, 24, 25, 26))
+        calWeeks(weekNumbers = listOf(27, 28, 29, 30, 31, 1, 2))
     }
 }
 
@@ -55,26 +90,28 @@ fun calWeeks(weekNumbers: List<Int>) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in weekNumbers) {
-            var isSelected by remember { mutableStateOf(false)}
+            var isSelected by remember { mutableStateOf(false) }
             Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable( //indications used for disabling ripple effect
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        enabled = true,
+                        role = Role.Button,
+                    ) {
+                        isSelected = isSelected.not()
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    modifier = Modifier
-                        .clickable(
-                            enabled = true,
-                            role = Role.Button
-                        ) {
-                            isSelected = isSelected.not()
-                        }
-                        .padding(8.dp),
+                    modifier = Modifier.padding(8.dp),
                     text = i.toString(),
                     color = Color.White,
-                    fontSize = 12.sp,
-                    )
-                if (isSelected) {
+                    style = MaterialTheme.typography.body1
+                )
+                if (isSelected)
                     drawCircle()
-                }
             }
         }
     }
@@ -82,24 +119,25 @@ fun calWeeks(weekNumbers: List<Int>) {
 
 @Composable
 fun drawCircle() {
-    val radius = 200f
     val animateFloat = remember { Animatable(0f) }
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 500, easing = FastOutLinearInEasing))
+            animationSpec = tween(durationMillis = 100, easing = LinearEasing)
+        )
     }
 
     Canvas(
-        modifier = Modifier.size(32.dp)
-    ){
+        modifier = Modifier
+            .size(32.dp)
+            .padding(2.dp)
+    ) {
         drawArc(
             color = secondary,
             startAngle = 0f,
             sweepAngle = 360f * animateFloat.value,
             useCenter = false,
-            topLeft = Offset(size.width / 4, size.height / 4),
-            style = Stroke(2.0f)
+            style = Stroke(width = 1.5f.dp.toPx())
         )
     }
 }
