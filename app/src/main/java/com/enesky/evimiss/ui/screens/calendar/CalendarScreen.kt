@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.enesky.evimiss.main.MainScaffold
+import com.enesky.evimiss.ui.custom.calendar.MyCalendar
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.white
 
@@ -27,43 +28,7 @@ fun CalendarScreen(calendarViewModel: CalendarViewModel) {
         //var name by remember { mutableStateOf("") }
         val name: String by calendarViewModel.name.observeAsState(initial = "")
 
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .paddingFromBaseline(top = 50.dp)
-        ) {
-            Text(
-                text = "Hello",
-                modifier = Modifier.padding(bottom = 8.dp),
-                style = typography.h5,
-                color = white
-            )
-            if (name.isNotEmpty())
-                Text(
-                    text = " $name !",
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = typography.h5,
-                    color = white
-                )
-        }
-        Text(
-            text = "Welcome to the Evimiss",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = typography.body1,
-            color = white
-        )
-        OutlinedTextField(
-            value = name,
-            onValueChange = { calendarViewModel.onNameChanged(newName = it) },
-            label = { Text("") },
-            placeholder = { Text("Enter your name") },
-            textStyle = typography.body1,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = secondary,
-                textColor = white
-            )
-
-        )
+        MyCalendar()
     }
 }
 

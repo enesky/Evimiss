@@ -1,21 +1,16 @@
 package com.enesky.evimiss.ui.custom.calendar
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
@@ -57,7 +52,6 @@ fun calMonth() {
 fun calWeeks(weekNumbers: List<Int>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in weekNumbers) {
@@ -79,11 +73,7 @@ fun calWeeks(weekNumbers: List<Int>) {
                     fontSize = 12.sp,
                     )
                 if (isSelected) {
-                    CircularProgressIndicator(
-                        progress = 1f,
-                        color = secondary,
-                        strokeWidth = 1.dp
-                    )
+                    drawCircle()
                 }
             }
         }
@@ -97,17 +87,18 @@ fun drawCircle() {
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 3000, easing = LinearEasing))
+            animationSpec = tween(durationMillis = 500, easing = FastOutLinearInEasing))
     }
 
-    Canvas(modifier = Modifier.fillMaxSize()){
+    Canvas(
+        modifier = Modifier.size(32.dp)
+    ){
         drawArc(
-            color = Color.Black,
+            color = secondary,
             startAngle = 0f,
             sweepAngle = 360f * animateFloat.value,
             useCenter = false,
             topLeft = Offset(size.width / 4, size.height / 4),
-            size = Size(radius * 2 , radius * 2),
             style = Stroke(2.0f)
         )
     }
