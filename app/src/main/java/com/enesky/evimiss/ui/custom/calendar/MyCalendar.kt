@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,35 +35,57 @@ fun MyCalendar() {
 
 @Composable
 fun calHeader() {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
+    Column() {
+        Row(
             modifier = Modifier
-                .weight(1F)
-                .size(32.dp)
-                .clickable { /* Todo: */ },
-            painter = painterResource(id = R.drawable.ic_arrow_left),
-            contentDescription = "swipeLeft"
-        )
-        Text(
-            modifier = Modifier.weight(5F),
-            text = "Eylül",
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            style = MaterialTheme.typography.h6
-        )
-        Image(
-            modifier = Modifier
-                .weight(1F)
-                .size(32.dp)
-                .clickable { /* Todo: */ },
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = "swipeRight"
-        )
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .weight(1F)
+                    .size(32.dp)
+                    .clickable { /* Todo: */ },
+                painter = painterResource(id = R.drawable.ic_arrow_left),
+                contentDescription = "swipeLeft"
+            )
+            Text(
+                modifier = Modifier.weight(5F),
+                text = "Eylül",
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                style = MaterialTheme.typography.h6
+            )
+            Image(
+                modifier = Modifier
+                    .weight(1F)
+                    .size(32.dp)
+                    .clickable { /* Todo: */ },
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = "swipeRight"
+            )
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically) {
+            val weekDays = listOf("Pzt", "Salı", "Çarş", "Perş", "Cuma", "Cmt", "Pzr")
+            for (day in weekDays)
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = day,
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
+                    style = MaterialTheme.typography.body1
+                )
+        }
+        Spacer(modifier = Modifier.size(4.dp))
+        Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     }
+
 }
 
 @Composable
@@ -94,7 +117,8 @@ fun calWeeks(weekNumbers: List<Int>) {
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable( //indications used for disabling ripple effect
+                    .clickable(
+                        //indications used for disabling ripple effect
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         enabled = true,
@@ -111,26 +135,31 @@ fun calWeeks(weekNumbers: List<Int>) {
                     style = MaterialTheme.typography.body1
                 )
                 if (isSelected)
-                    drawCircle()
+                    SelectToday()
+                if (i % 5 == 0)
+                    Column(
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(5.dp)) {
+                        for (j in listOf(1,2,3))
+                            MarkTheDate(color = secondary)
+                    }
             }
         }
     }
 }
 
 @Composable
-fun drawCircle() {
+fun SelectToday() {
     val animateFloat = remember { Animatable(0f) }
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 100, easing = LinearEasing)
+            animationSpec = tween(durationMillis = 200, easing = LinearEasing)
         )
     }
-
     Canvas(
-        modifier = Modifier
-            .size(32.dp)
-            .padding(2.dp)
+        modifier = Modifier.size(26.dp)
     ) {
         drawArc(
             color = secondary,
@@ -139,6 +168,16 @@ fun drawCircle() {
             useCenter = false,
             style = Stroke(width = 1.5f.dp.toPx())
         )
+    }
+}
+
+@Composable
+fun MarkTheDate(color: Color) {
+    Canvas(
+        Modifier
+            .size(5.dp)
+            .padding(1.dp)) {
+        drawCircle(color = color)
     }
 }
 
