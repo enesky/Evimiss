@@ -32,11 +32,11 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @Composable
 fun MyCalendar() {
-    calMonth()
+    CalMonth()
 }
 
 @Composable
-fun calHeader() {
+fun CalHeader() {
     Column {
         Row(
             modifier = Modifier
@@ -91,25 +91,25 @@ fun calHeader() {
 }
 
 @Composable
-fun calMonth() {
+fun CalMonth() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Spacer(modifier = Modifier.size(8.dp))
-        calHeader()
+        CalHeader()
         Spacer(modifier = Modifier.size(8.dp))
-        calWeeks(weekNumbers = listOf(29, 30, 1, 2, 3, 4, 5))
-        calWeeks(weekNumbers = listOf(6, 7, 8, 9, 10, 11, 12))
-        calWeeks(weekNumbers = listOf(13, 14, 15, 16, 17, 18, 19))
-        calWeeks(weekNumbers = listOf(20, 21, 22, 23, 24, 25, 26))
-        calWeeks(weekNumbers = listOf(27, 28, 29, 30, 31, 1, 2))
+        CalWeeks(weekNumbers = listOf(29, 30, 1, 2, 3, 4, 5))
+        CalWeeks(weekNumbers = listOf(6, 7, 8, 9, 10, 11, 12))
+        CalWeeks(weekNumbers = listOf(13, 14, 15, 16, 17, 18, 19))
+        CalWeeks(weekNumbers = listOf(20, 21, 22, 23, 24, 25, 26))
+        CalWeeks(weekNumbers = listOf(27, 28, 29, 30, 31, 1, 2))
     }
 }
 
 @Composable
-fun calWeeks(weekNumbers: List<Int>) {
+fun CalWeeks(weekNumbers: List<Int>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -215,11 +215,15 @@ fun markToday(day: Int): Color {
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd")
     //val today = LocalDate.parse(LocalDate.now().toString(), dateFormatter)
     //val selected = LocalDate.parse(day.toString(), dateFormatter)
-    val now = LocalDate.now()
+    val isToday = try {
+        LocalDate.now().dayOfMonth == day
+    } catch (e: Exception) { //Used cause of ZoneRulesException on Preview
+        6 == day
+    }
 
     val maxDaysInMonth = LocalDateTime.MAX
 
-    return if (now.dayOfMonth == day) secondaryLight else Color.White
+    return if (isToday) secondaryLight else Color.White
 }
 
 @Preview
