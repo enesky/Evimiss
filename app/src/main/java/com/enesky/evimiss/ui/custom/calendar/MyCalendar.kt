@@ -5,8 +5,6 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRowDefaults.Divider
@@ -17,12 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.secondary
+import com.enesky.evimiss.ui.theme.secondaryLight
+import com.enesky.evimiss.utils.clickableWithoutRipple
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 /**
  * Created by Enes Kamil YILMAZ on 04/09/2021
@@ -35,7 +37,7 @@ fun MyCalendar() {
 
 @Composable
 fun calHeader() {
-    Column() {
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -47,7 +49,7 @@ fun calHeader() {
                 modifier = Modifier
                     .weight(1F)
                     .size(32.dp)
-                    .clickable { /* Todo: */ },
+                    .clickableWithoutRipple { /* Todo: */ },
                 painter = painterResource(id = R.drawable.ic_arrow_left),
                 contentDescription = "swipeLeft"
             )
@@ -62,7 +64,7 @@ fun calHeader() {
                 modifier = Modifier
                     .weight(1F)
                     .size(32.dp)
-                    .clickable { /* Todo: */ },
+                    .clickableWithoutRipple { /* Todo: */ },
                 painter = painterResource(id = R.drawable.ic_arrow_right),
                 contentDescription = "swipeRight"
             )
@@ -112,31 +114,37 @@ fun calWeeks(weekNumbers: List<Int>) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        for (i in weekNumbers) {
+
+        var selectedDate by remember { mutableStateOf(-1)}
+        var unselectedDate by remember { mutableStateOf(-1)}
+
+        for (dayNumber in weekNumbers) {
             var isSelected by remember { mutableStateOf(false) }
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable(
-                        //indications used for disabling ripple effect
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        enabled = true,
-                        role = Role.Button,
-                    ) {
+                    .clickableWithoutRipple {
+                        if (selectedDate != -1)
+                            unselectedDate = dayNumber
                         isSelected = isSelected.not()
+                        if (isSelected)
+                            selectedDate = dayNumber
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = i.toString(),
-                    color = Color.White,
+                    text = dayNumber.toString(),
+                    color = markToday(dayNumber),
                     style = MaterialTheme.typography.body1
                 )
                 if (isSelected)
-                    SelectToday()
-                if (i % 5 == 0)
+                    SelectDate()
+                if (unselectedDate != -1 && isSelected.not()) {
+                    UnselectDate()
+                    unselectedDate = -1
+                }
+                if (dayNumber % 5 == 0)
                     Column(
                         Modifier
                             .align(Alignment.TopEnd)
@@ -150,7 +158,7 @@ fun calWeeks(weekNumbers: List<Int>) {
 }
 
 @Composable
-fun SelectToday() {
+fun SelectDate() {
     val animateFloat = remember { Animatable(0f) }
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
@@ -172,13 +180,46 @@ fun SelectToday() {
 }
 
 @Composable
+fun UnselectDate() {
+    val animateFloat = remember { Animatable(1f) }
+    LaunchedEffect(animateFloat) {
+        animateFloat.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(durationMillis = 200, easing = LinearEasing)
+        )
+    }
+    Canvas(
+        modifier = Modifier.size(26.dp)
+    ) {
+        drawArc(
+            color = secondary,
+            startAngle = 0f,
+            sweepAngle = 360f * animateFloat.value,
+            useCenter = false,
+            style = Stroke(width = 1.5f.dp.toPx())
+        )
+    }
+}
+
+@Composable
 fun MarkTheDate(color: Color) {
     Canvas(
         Modifier
-            .size(5.dp)
+            .size(6.dp)
             .padding(1.dp)) {
         drawCircle(color = color)
     }
+}
+
+fun markToday(day: Int): Color {
+    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd")
+    //val today = LocalDate.parse(LocalDate.now().toString(), dateFormatter)
+    //val selected = LocalDate.parse(day.toString(), dateFormatter)
+    val now = LocalDate.now()
+
+    val maxDaysInMonth = LocalDateTime.MAX
+
+    return if (now.dayOfMonth == day) secondaryLight else Color.White
 }
 
 @Preview
