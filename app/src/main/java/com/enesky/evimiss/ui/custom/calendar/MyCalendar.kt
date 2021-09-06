@@ -21,10 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
-import com.enesky.evimiss.utils.clickableWithoutRipple
+import com.enesky.evimiss.utils.*
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
 
 /**
  * Created by Enes Kamil YILMAZ on 04/09/2021
@@ -37,6 +35,7 @@ fun MyCalendar() {
 
 @Composable
 fun CalHeader() {
+    var currentDate by remember { mutableStateOf(MyDate(date = getToday())) }
     Column {
         Row(
             modifier = Modifier
@@ -49,13 +48,15 @@ fun CalHeader() {
                 modifier = Modifier
                     .weight(1F)
                     .size(32.dp)
-                    .clickableWithoutRipple { /* Todo: */ },
+                    .clickableWithoutRipple {
+                        currentDate = MyDate(date = currentDate.date.minusMonths(1))
+                    },
                 painter = painterResource(id = R.drawable.ic_arrow_left),
                 contentDescription = "swipeLeft"
             )
             Text(
                 modifier = Modifier.weight(5F),
-                text = "Eylül",
+                text = currentDate.month,
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 style = MaterialTheme.typography.h6
@@ -64,7 +65,9 @@ fun CalHeader() {
                 modifier = Modifier
                     .weight(1F)
                     .size(32.dp)
-                    .clickableWithoutRipple { /* Todo: */ },
+                    .clickableWithoutRipple {
+                        currentDate = MyDate(date = currentDate.date.plusMonths(1))
+                    },
                 painter = painterResource(id = R.drawable.ic_arrow_right),
                 contentDescription = "swipeRight"
             )
@@ -74,8 +77,7 @@ fun CalHeader() {
             .padding(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically) {
-            val weekDays = listOf("Pzt", "Salı", "Çarş", "Perş", "Cuma", "Cmt", "Pzr")
-            for (day in weekDays)
+            for (day in getDaynames())
                 Text(
                     modifier = Modifier.weight(1f),
                     text = day,
@@ -100,51 +102,61 @@ fun CalMonth() {
         Spacer(modifier = Modifier.size(8.dp))
         CalHeader()
         Spacer(modifier = Modifier.size(8.dp))
-        CalWeeks(weekNumbers = listOf(29, 30, 1, 2, 3, 4, 5))
-        CalWeeks(weekNumbers = listOf(6, 7, 8, 9, 10, 11, 12))
-        CalWeeks(weekNumbers = listOf(13, 14, 15, 16, 17, 18, 19))
-        CalWeeks(weekNumbers = listOf(20, 21, 22, 23, 24, 25, 26))
-        CalWeeks(weekNumbers = listOf(27, 28, 29, 30, 31, 1, 2))
+        CalWeeks(monthList = getMonthList())
     }
 }
 
 @Composable
-fun CalWeeks(weekNumbers: List<Int>) {
+fun CalWeeks(monthList: MutableList<MyDate>) {
+
+    val weeks = monthList.getWeeksOfMonth()
+
+    for (weekList in weeks) {
+        CalWeek(week = weekList.second)
+    }
+
+}
+
+@Composable
+fun CalWeek(week: MutableList<MyDate>) {
+
+    var selectedDate: LocalDate? by remember { mutableStateOf(null) }
+    var unselectedDate: LocalDate? by remember { mutableStateOf(null) }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        var selectedDate by remember { mutableStateOf(-1)}
-        var unselectedDate by remember { mutableStateOf(-1)}
-
-        for (dayNumber in weekNumbers) {
+        for (day in week) {
             var isSelected by remember { mutableStateOf(false) }
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .clickableWithoutRipple {
-                        if (selectedDate != -1)
-                            unselectedDate = dayNumber
+                        if (day.date.isFromThisMonth().not())
+                            return@clickableWithoutRipple
+                        if (selectedDate != null)
+                            unselectedDate = day.date
                         isSelected = isSelected.not()
                         if (isSelected)
-                            selectedDate = dayNumber
+                            selectedDate = day.date
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = dayNumber.toString(),
-                    color = markToday(dayNumber),
+                    text = day.dayOfMonth.toString(),
+                    color = colorizeDate(myDate = day),
                     style = MaterialTheme.typography.body1
                 )
                 if (isSelected)
                     SelectDate()
-                if (unselectedDate != -1 && isSelected.not()) {
+                if (unselectedDate != null && isSelected.not()) {
                     UnselectDate()
-                    unselectedDate = -1
+                    unselectedDate = null
                 }
-                if (dayNumber % 5 == 0)
+                if (day.hasEvents)
                     Column(
                         Modifier
                             .align(Alignment.TopEnd)
@@ -163,12 +175,10 @@ fun SelectDate() {
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 200, easing = LinearEasing)
+            animationSpec = tween(durationMillis = 250, easing = LinearEasing)
         )
     }
-    Canvas(
-        modifier = Modifier.size(26.dp)
-    ) {
+    Canvas(modifier = Modifier.size(26.dp)) {
         drawArc(
             color = secondary,
             startAngle = 0f,
@@ -181,20 +191,18 @@ fun SelectDate() {
 
 @Composable
 fun UnselectDate() {
-    val animateFloat = remember { Animatable(1f) }
+    val animateFloat = remember { Animatable(0f) }
     LaunchedEffect(animateFloat) {
         animateFloat.animateTo(
-            targetValue = 0f,
-            animationSpec = tween(durationMillis = 200, easing = LinearEasing)
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 250, easing = LinearEasing)
         )
     }
-    Canvas(
-        modifier = Modifier.size(26.dp)
-    ) {
+    Canvas(modifier = Modifier.size(26.dp)) {
         drawArc(
             color = secondary,
-            startAngle = 0f,
-            sweepAngle = 360f * animateFloat.value,
+            startAngle = 360f * animateFloat.value,
+            sweepAngle = 0f,
             useCenter = false,
             style = Stroke(width = 1.5f.dp.toPx())
         )
@@ -211,19 +219,10 @@ fun MarkTheDate(color: Color) {
     }
 }
 
-fun markToday(day: Int): Color {
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd")
-    //val today = LocalDate.parse(LocalDate.now().toString(), dateFormatter)
-    //val selected = LocalDate.parse(day.toString(), dateFormatter)
-    val isToday = try {
-        LocalDate.now().dayOfMonth == day
-    } catch (e: Exception) { //Used cause of ZoneRulesException on Preview
-        6 == day
-    }
-
-    val maxDaysInMonth = LocalDateTime.MAX
-
-    return if (isToday) secondaryLight else Color.White
+fun colorizeDate(myDate: MyDate): Color = when {
+    isToday(myDate.date) -> secondaryLight
+    myDate.date.isFromThisMonth().not() -> Color.White.copy(alpha = 0.3f)
+    else -> Color.White
 }
 
 @Preview
