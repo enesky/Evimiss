@@ -14,5 +14,20 @@ data class MyDate(
     var dayOfWeekValue: Int = date.dayOfWeek.value, // 1
     var dayOfMonth: Int = date.dayOfMonth,// 1
     var month: String = date.month.getDisplayName(TextStyle.FULL, Locale("TR")),// "Eylül",
-    var hasEvents: Boolean = dayOfMonth % 5 == 0 //false
+    var events: List<Int> = (0..(1..3).random()).toList(),
+    var hasEvents: Boolean = dayOfMonth % (1..10).random() == 0 //false
+)
+
+data class Event(
+    var date: LocalDate,
+    var users: List<User>,
+    var details: String,
+    var attachments: String,
+    var isExpense: Boolean = false,
+    var hasAlarm: Boolean = false
+)
+
+data class User (
+    var username: String,
+    var email: String,
 )

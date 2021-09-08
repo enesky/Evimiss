@@ -3,6 +3,7 @@ package com.enesky.evimiss.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -17,11 +18,11 @@ import com.enesky.evimiss.ui.scaffold.FloatingAddButton
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNav
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.screens.SplashScreen
-import com.enesky.evimiss.ui.screens.calendar.CalendarViewModel
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.primary
 import com.enesky.evimiss.ui.theme.primaryDark
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun Main() {
     val navController = rememberNavController()
@@ -68,14 +70,16 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
     }
 }
 
+@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
     MainScaffold(
-        content = { CalendarScreen(calendarViewModel = CalendarViewModel()) }
+        content = { CalendarScreen() }
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun NavigationFromSplash() {
     val navController = rememberNavController()

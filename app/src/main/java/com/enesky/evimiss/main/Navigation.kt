@@ -1,5 +1,6 @@
 package com.enesky.evimiss.main
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,13 +9,13 @@ import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNavItem
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.screens.MoreScreen
 import com.enesky.evimiss.ui.screens.NotesScreen
-import com.enesky.evimiss.ui.screens.calendar.CalendarViewModel
 
+@ExperimentalAnimationApi
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController, startDestination = BottomNavItem.Calendar.route) {
         composable(BottomNavItem.Notes.route) { NotesScreen() }
-        composable(BottomNavItem.Calendar.route) { CalendarScreen(calendarViewModel = CalendarViewModel()) }
+        composable(BottomNavItem.Calendar.route) { CalendarScreen() }
         composable(BottomNavItem.More.route) { MoreScreen() }
     }
 }
