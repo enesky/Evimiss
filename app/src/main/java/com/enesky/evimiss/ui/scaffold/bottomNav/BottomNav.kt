@@ -22,7 +22,7 @@ fun BottomNav(navController: NavController? = null) {
     val screens = listOf(
         BottomNavItem.Notes,
         BottomNavItem.Calendar,
-        BottomNavItem.More
+        BottomNavItem.Expense
     )
     Surface(
         color = primaryDark,

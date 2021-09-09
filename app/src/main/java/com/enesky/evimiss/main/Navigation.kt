@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNavItem
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
-import com.enesky.evimiss.ui.screens.MoreScreen
+import com.enesky.evimiss.ui.screens.expense.ExpenseScreen
 import com.enesky.evimiss.ui.screens.NotesScreen
 
 @ExperimentalAnimationApi
@@ -16,6 +16,6 @@ fun Navigation(navController: NavHostController) {
     NavHost(navController, startDestination = BottomNavItem.Calendar.route) {
         composable(BottomNavItem.Notes.route) { NotesScreen() }
         composable(BottomNavItem.Calendar.route) { CalendarScreen() }
-        composable(BottomNavItem.More.route) { MoreScreen() }
+        composable(BottomNavItem.Expense.route) { ExpenseScreen() }
     }
 }
