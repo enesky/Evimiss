@@ -15,14 +15,16 @@ data class MyDate(
     var dayOfMonth: Int = date.dayOfMonth,// 1
     var month: String = date.month.getDisplayName(TextStyle.FULL, Locale("TR")),// "Eylül",
     var events: List<Int> = (0..(1..3).random()).toList(),
-    var hasEvents: Boolean = dayOfMonth % (1..10).random() == 0 //false
+    var hasEvents: Boolean = dayOfMonth % (1..10).random() == 0, //false
+    var time: LocalTime = LocalTime.MIN,
+    var dateTime: LocalDateTime = LocalDateTime.of(date, time)
 )
 
 data class Event(
     var date: LocalDate,
-    var users: List<User>,
-    var details: String,
-    var attachments: String,
+    var users: List<User>? = listOf(),
+    var details: String? = "",
+    var attachments: String? = "",
     var isExpense: Boolean = false,
     var hasAlarm: Boolean = false
 )
