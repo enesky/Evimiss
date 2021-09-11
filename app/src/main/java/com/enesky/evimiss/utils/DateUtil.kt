@@ -2,14 +2,13 @@ package com.enesky.evimiss.utils
 
 import com.enesky.evimiss.ui.custom.calendar.MyDate
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
 import java.util.*
 import kotlin.Exception as KotlinException
 
 const val DATE_FORMAT = "yyyy-MM-dd"
-const val DETAILED_DATE_FORMAT = "dd MMMM EEEE"
+const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
 const val TEST_DATE = "2021-09-16"
 
 fun isToday(givenDate: String): Boolean {
@@ -102,8 +101,7 @@ fun getTodaysMyDate(): MyDate {
     }
 }
 
-fun LocalDate.isFromThisMonth(givenMonth: Month = getToday().month): Boolean =
-    this.month.equals(givenMonth)
+fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean = month.equals(givenDate.month) && year == givenDate.year
 
 fun String.convert2FormattedLocalDate(): LocalDate {
     val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
@@ -116,6 +114,6 @@ fun String.convert2DetailedLocalDate(): LocalDate {
 }
 
 fun LocalDate.convert2DetailedDate(): String {
-    val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT)
+    val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR"))
     return format(format)
 }

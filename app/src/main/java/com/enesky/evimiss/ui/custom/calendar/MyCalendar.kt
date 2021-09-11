@@ -4,11 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,7 +32,6 @@ import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
 import com.enesky.evimiss.utils.*
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 
 /**
  * Created by Enes Kamil YILMAZ on 04/09/2021
@@ -49,7 +46,6 @@ fun MyCalendar() {
 @ExperimentalAnimationApi
 @Composable
 fun Main() {
-
     val viewModel = MyCalendarVM()
     val viewState = viewModel.myCalendarViewState().collectAsState()
 
@@ -72,31 +68,30 @@ fun Main() {
             EventItem(event = item)
         }
     }
-
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarViewState>) {
     Column {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = Modifier
-                    .weight(1F)
+                    .weight(3F)
+                    .padding(end = 32.dp)
                     .size(32.dp)
-                    .clickable {
+                    .clickableWithoutRipple {
                         viewModel.onPreviousMonthClicked()
                     },
                 painter = painterResource(id = R.drawable.ic_arrow_left),
                 contentDescription = "swipeLeft"
             )
             Column(
-                modifier = Modifier.weight(5F),
+                modifier = Modifier.weight(2F),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -117,17 +112,56 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarV
                     )
                 )
             }
-            Image(
-                modifier = Modifier
-                    .weight(1F)
-                    .size(32.dp)
-                    .clickableWithoutRipple {
-                        viewModel.onNextMonthClicked()
-                    },
-                painter = painterResource(id = R.drawable.ic_arrow_right),
-                contentDescription = "swipeRight"
-            )
+            Box(
+                modifier = Modifier.weight(3f),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxSize()
+                        .padding(start = 32.dp)
+                        .size(32.dp)
+                        .clickableWithoutRipple {
+                            viewModel.onNextMonthClicked()
+                        },
+                    painter = painterResource(id = R.drawable.ic_arrow_right),
+                    contentDescription = "swipeRight"
+                )
+                Row(
+                    modifier = Modifier
+                        .offset(x = (-8).dp, y = 0.dp)
+                        .clickableWithoutRipple {
+                            viewModel.onBackToTodayClicked()
+                        }
+                ) { // Had to use this cause of kotlin import error. To see visit: https://stackoverflow.com/questions/67975569/why-cant-i-use-animatedvisibility-in-a-boxscope
+                    AnimatedVisibility(visible = viewModel.isBack2TodayAvailable()) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(id = R.drawable.ic_today),
+                                contentDescription = "today",
+                                tint = secondaryLight
+                            )
+                            Text(
+                                text = "Bugün",
+                                textAlign = TextAlign.Center,
+                                color = secondaryLight,
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 12.sp,
+                                    letterSpacing = 0.5.sp
+                                )
+                            )
+                        }
+                    }
+                }
+            }
         }
+        Spacer(modifier = Modifier.size(4.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,7 +219,7 @@ fun CalDay(
             text = myDate.dayOfMonth.toString(),
             color = colorizeDate(
                 myDate = myDate,
-                givenMonth = viewState.value.currentDate.date.month
+                givenDate = viewState.value.currentDate.date
             ),
             style = MaterialTheme.typography.body1
         )
@@ -259,18 +293,6 @@ fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalenda
             color = Color.White,
             style = MaterialTheme.typography.body1
         )
-        AnimatedVisibility(visible = viewState.value.selectedDate.date.isEqual(getToday()).not()) {
-            Icon(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .clickableWithoutRipple {
-                        viewModel.onBackToTodayClicked()
-                    },
-                painter = painterResource(id = R.drawable.ic_today),
-                contentDescription = "today",
-                tint = secondaryLight
-            )
-        }
     }
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
 }
@@ -315,14 +337,14 @@ fun EventItem(event: Event) {
             modifier = Modifier.padding(8.dp),
             text = event.details.toString(),
             color = Color.White,
-            style = MaterialTheme.typography.caption
+            style = MaterialTheme.typography.subtitle2
         )
     }
 }
 
-fun colorizeDate(myDate: MyDate, givenMonth: Month): Color = when {
+fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
     isToday(myDate.date) -> secondaryLight
-    myDate.date.isFromThisMonth(givenMonth).not() -> Color.White.copy(alpha = 0.3f)
+    myDate.date.isFromThisMonth(givenDate).not() -> Color.White.copy(alpha = 0.3f)
     else -> Color.White
 }
 

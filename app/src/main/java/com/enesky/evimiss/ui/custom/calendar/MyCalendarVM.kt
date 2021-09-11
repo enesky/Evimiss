@@ -2,10 +2,8 @@ package com.enesky.evimiss.ui.custom.calendar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.enesky.evimiss.utils.getMonthList
+import com.enesky.evimiss.utils.*
 import com.enesky.evimiss.utils.getTodaysMyDate
-import com.enesky.evimiss.utils.getWeeksOfMonth
-import com.enesky.evimiss.utils.isFromThisMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,10 +24,13 @@ class MyCalendarVM: ViewModel() {
 
     fun isSelectedDateInitial() = _myCalendarViewState.value.selectedDate.date == LocalDate.MIN
 
+    fun isBack2TodayAvailable(): Boolean =
+        myCalendarViewState().value.currentDate.date.isFromThisMonth().not()
+
     fun onDateSelected(selectedDate: MyDate) {
         viewModelScope.launch(Dispatchers.IO) {
             val currentDate = MyDate(myCalendarViewState().value.currentDate.date)
-            if (selectedDate.date.isFromThisMonth(currentDate.date.month).not()) {
+            if (selectedDate.date.isFromThisMonth(currentDate.date).not()) {
                 _myCalendarViewState.update {
                     it.copy(
                         selectedDate = selectedDate,
@@ -74,9 +75,9 @@ class MyCalendarVM: ViewModel() {
             _myCalendarViewState.update {
                 it.copy(
                     currentDate = currentDate,
+                    selectedDate = currentDate,
                     title = currentDate.month,
                     weekLists = getMonthList(currentDate.date).getWeeksOfMonth(),
-                    selectedDate = currentDate
                 )
             }
         }
