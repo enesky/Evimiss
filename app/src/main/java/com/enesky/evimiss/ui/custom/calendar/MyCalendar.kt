@@ -22,10 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
@@ -92,15 +95,28 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarV
                 painter = painterResource(id = R.drawable.ic_arrow_left),
                 contentDescription = "swipeLeft"
             )
-            Text(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .weight(5F),
-                text = viewState.value.title,
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                style = MaterialTheme.typography.h6
-            )
+            Column(
+                modifier = Modifier.weight(5F),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = viewState.value.currentDate.date.year.toString(),
+                    textAlign = TextAlign.Center,
+                    color = Color.White.copy(alpha = 0.4f),
+                    style = MaterialTheme.typography.subtitle2
+                )
+                Text(
+                    text = viewState.value.title,
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        letterSpacing = 0.5.sp
+                    )
+                )
+            }
             Image(
                 modifier = Modifier
                     .weight(1F)
