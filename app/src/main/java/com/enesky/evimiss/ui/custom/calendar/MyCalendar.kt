@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRowDefaults.Divider
@@ -48,8 +49,10 @@ fun MyCalendar() {
 fun Main() {
     val viewModel = MyCalendarVM()
     val viewState = viewModel.myCalendarViewState().collectAsState()
+    val listState = rememberLazyListState()
 
     LazyColumn(
+        state = listState,
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -319,22 +322,16 @@ fun getDetails(date: LocalDate) = listOf(
 @Composable
 fun EventItem(event: Event) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().offset(x = 4.dp).padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Canvas(
-            Modifier
-                .size(6.dp)
-                .padding(1.dp)
-        ) {
+        Canvas(Modifier.size(8.dp).padding(2.dp).align(Alignment.CenterVertically)) {
             drawCircle(color = secondary)
         }
-        
-        Spacer(modifier = Modifier.size(4.dp))
 
         Text(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.offset(x = 8.dp),
             text = event.details.toString(),
             color = Color.White,
             style = MaterialTheme.typography.subtitle2
