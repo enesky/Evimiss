@@ -9,6 +9,7 @@ import kotlin.Exception as KotlinException
 
 const val DATE_FORMAT = "yyyy-MM-dd"
 const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
+const val TIMELINE_DATE = "MMMM, yyyy"
 const val TEST_DATE = "2021-09-16"
 
 fun isToday(givenDate: String): Boolean {
@@ -103,17 +104,14 @@ fun getTodaysMyDate(): MyDate {
 
 fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean = month.equals(givenDate.month) && year == givenDate.year
 
-fun String.convert2FormattedLocalDate(): LocalDate {
-    val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
-    return LocalDate.parse(this, format)
-}
+fun String.convert2FormattedLocalDate(): LocalDate =
+    LocalDate.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT).withLocale(Locale("TR")))
 
-fun String.convert2DetailedLocalDate(): LocalDate {
-    val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT)
-    return LocalDate.parse(this, format)
-}
+fun String.convert2DetailedLocalDate(): LocalDate =
+    LocalDate.parse(this, DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR")))
 
-fun LocalDate.convert2DetailedDate(): String {
-    val format: DateTimeFormatter = DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR"))
-    return format(format)
-}
+fun LocalDate.convert2DetailedDate(): String =
+    format(DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR")))
+
+fun LocalDate.convert2TimelineDate(): String =
+    format(DateTimeFormatter.ofPattern(TIMELINE_DATE).withLocale(Locale("TR")))

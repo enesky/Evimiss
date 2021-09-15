@@ -326,7 +326,7 @@ fun EventItem(event: Event) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Canvas(Modifier.size(8.dp).padding(2.dp).align(Alignment.CenterVertically)) {
+        Canvas(Modifier.size(4.dp).align(Alignment.CenterVertically)) {
             drawCircle(color = secondary)
         }
 
