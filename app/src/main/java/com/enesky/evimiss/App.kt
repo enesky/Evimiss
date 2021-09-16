@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 /**
@@ -14,6 +15,7 @@ class App: Application() {
 
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var mFirebaseCrashlytics: FirebaseCrashlytics? = null
+    private var mFirebaseAuth: FirebaseAuth? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -21,6 +23,7 @@ class App: Application() {
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         mFirebaseCrashlytics = FirebaseCrashlytics.getInstance()
+        mFirebaseAuth = FirebaseAuth.getInstance()
 
         val tempUserId = Build.BRAND + " " + Build.DEVICE
         mFirebaseAnalytics?.setUserId(tempUserId)
