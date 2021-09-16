@@ -17,4 +17,5 @@
     <string name="label_today">Today</string>
     <string name="label_petrol">Petrol</string>
     <string name="label_expense_type">Expense Type</string>
+    <string name="label_sign_in_anonymously">Sign in as guest</string>
 </resources>

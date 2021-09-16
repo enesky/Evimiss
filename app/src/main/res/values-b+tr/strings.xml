@@ -17,4 +17,5 @@
     <string name="label_today">Bugün</string>
     <string name="label_petrol">Benzin</string>
     <string name="label_expense_type">Harcama Tipi</string>
+    <string name="label_sign_in_anonymously">Misafir olarak giriş yap</string>
 </resources>

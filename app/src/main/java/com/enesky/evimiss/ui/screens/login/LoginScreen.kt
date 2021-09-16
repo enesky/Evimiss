@@ -1,5 +1,7 @@
 package com.enesky.evimiss.ui.screens.login
 
+import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,12 +30,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.enesky.evimiss.R
 import com.enesky.evimiss.main.MAIN
+import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.custom.GoogleButton
 import com.enesky.evimiss.ui.theme.EvimissTheme
+import com.enesky.evimiss.utils.signInAnonymously
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun LoginScreen(navController: NavController? = null) {
+
+    val activity = LocalContext.current as MainActivity
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -54,7 +62,7 @@ fun LoginScreen(navController: NavController? = null) {
                 )
                 Card(
                     Modifier
-                        .weight(2f)
+                        .weight(2.4f)
                         .padding(8.dp),
                     shape = RoundedCornerShape(32.dp)
                 ) {
@@ -141,14 +149,40 @@ fun LoginScreen(navController: NavController? = null) {
                                 }
                             )
                             Spacer(modifier = Modifier.weight(1f))
+                            TextButton(
+                                modifier = Modifier.padding(4.dp),
+                                onClick = {
+                                    activity.signInAnonymously(
+                                        onSuccess = {
+                                            navController?.navigate(MAIN)
+                                        },
+                                        onFail = {
+                                            Log.d("Anonymously SignIn", "FAILED")
+                                        }
+                                    )
+                                }
+                            ) {
+                                Text(text = stringResource(R.string.label_sign_in_anonymously), color = Color.White)
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                TextButton(onClick = {}) {
+                                TextButton(
+                                    modifier = Modifier.padding(4.dp),
+                                    onClick = {
+                                        //Todo: navigate to signup screen
+                                    }
+                                ) {
                                     Text(text = stringResource(R.string.label_sign_up), color = Color.White)
                                 }
-                                TextButton(onClick = { }) {
+                                TextButton(
+                                    modifier = Modifier.padding(4.dp),
+                                    onClick = {
+                                        //Todo: navigate to forgot password screen
+                                    }
+                                ) {
                                     Text(text = stringResource(R.string.label_forgot_password), color = Color.White)
                                 }
                             }
@@ -160,6 +194,7 @@ fun LoginScreen(navController: NavController? = null) {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable

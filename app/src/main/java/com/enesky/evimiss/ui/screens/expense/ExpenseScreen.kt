@@ -1,13 +1,18 @@
 package com.enesky.evimiss.ui.screens.expense
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,14 +33,21 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.enesky.evimiss.R
+import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.custom.chart.MyChart
 import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.utils.convert2TimelineDate
 import com.enesky.evimiss.utils.getToday
+import com.enesky.evimiss.utils.restart
+import com.enesky.evimiss.utils.signOut
 
+@ExperimentalAnimationApi
 @Composable
 fun ExpenseScreen() {
+
+    val activity = LocalContext.current as MainActivity
+
     var lazyColumnHeight = 0f
     val animatedProgress = remember { Animatable(0f) }
     LaunchedEffect(animatedProgress) {
@@ -46,6 +59,7 @@ fun ExpenseScreen() {
     val constraintSet = ConstraintSet {
         val pieChart = createRefFor("chart")
         val expenses = createRefFor("expenses")
+        val settings = createRefFor("settings")
 
         constrain(pieChart) {
             top.linkTo(parent.top)
@@ -61,11 +75,29 @@ fun ExpenseScreen() {
             //bottom.linkTo(parent.bottom)
             height = Dimension.fillToConstraints
         }
+
+        constrain(settings) {
+            top.linkTo(parent.top)
+            end.linkTo(parent.end)
+        }
     }
     ConstraintLayout(
         constraintSet = constraintSet,
         modifier = Modifier.fillMaxSize()
     ) {
+        Icon(
+            modifier = Modifier
+                .layoutId("settings")
+                .padding(4.dp)
+                .clickable {
+                    //Todo: navigate to settings screen
+                    signOut()
+                    activity.restart()
+                },
+            imageVector = Icons.Rounded.Settings,
+            contentDescription = "Settings",
+            tint = secondary
+        )
         MyChart(modifier = Modifier.layoutId("chart"))
         LazyColumn(
             modifier = Modifier
@@ -104,12 +136,17 @@ fun ExpenseDate() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Canvas(Modifier.size(8.dp).offset(x = 2.dp)) {
+        Canvas(
+            Modifier
+                .size(8.dp)
+                .offset(x = 2.dp)) {
             drawCircle(color = secondary)
         }
 
         Text(
-            modifier = Modifier.padding(4.dp).offset(x = 4.dp),
+            modifier = Modifier
+                .padding(4.dp)
+                .offset(x = 4.dp),
             text = getToday().convert2TimelineDate(),
             color = Color.White,
             style = MaterialTheme.typography.subtitle2
@@ -125,7 +162,9 @@ fun ExpenseItem() {
         horizontalArrangement = Arrangement.Start
     ) {
         Text(
-            modifier = Modifier.padding(4.dp).offset(x = 16.dp),
+            modifier = Modifier
+                .padding(4.dp)
+                .offset(x = 16.dp),
             text = stringResource(R.string.label_expense),
             color = Color.White,
             style = MaterialTheme.typography.subtitle2
@@ -133,6 +172,7 @@ fun ExpenseItem() {
     }
 }
 
+@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun ExpenseScreenPreview() {

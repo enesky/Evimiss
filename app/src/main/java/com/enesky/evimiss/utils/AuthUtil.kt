@@ -37,6 +37,20 @@ fun Activity.signInWithEmailAndPassword(
     }
 }
 
+fun Activity.signInAnonymously(
+    onSuccess: (() -> Unit)? = null,
+    onFail: (() -> Unit)? = null
+) {
+    App.mAuth.signInAnonymously().addOnCompleteListener(this) { task ->
+        if (task.isSuccessful) {
+            val user = App.mAuth.currentUser
+            onSuccess?.invoke()
+        } else {
+            onFail?.invoke()
+        }
+    }
+}
+
 fun signOut() {
     App.mAuth.signOut()
 }
