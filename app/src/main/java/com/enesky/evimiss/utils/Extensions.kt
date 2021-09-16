@@ -27,7 +27,6 @@ fun getString(@StringRes id : Int) = App.mInstance.getString(id)
 
 @ExperimentalAnimationApi
 fun MainActivity.restart() {
-    finish()
     val newIntent = intent
     newIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     startActivity(newIntent)

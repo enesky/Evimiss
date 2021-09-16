@@ -19,6 +19,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:configChanges="keyboard|keyboardHidden|screenLayout|uiMode|smallestScreenSize|orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:theme="@style/SplashTheme"
