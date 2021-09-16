@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import com.enesky.evimiss.main.MainScaffold
 import com.enesky.evimiss.ui.custom.chart.MyChart
+import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.utils.convert2TimelineDate
 import com.enesky.evimiss.utils.getToday

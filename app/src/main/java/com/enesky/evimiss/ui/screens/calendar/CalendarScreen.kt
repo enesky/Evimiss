@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.enesky.evimiss.main.MainScaffold
 import com.enesky.evimiss.ui.custom.calendar.MyCalendar
+import com.enesky.evimiss.ui.screens.main.MainScaffold
 
 @ExperimentalAnimationApi
 @Composable

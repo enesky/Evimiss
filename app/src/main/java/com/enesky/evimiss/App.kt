@@ -13,9 +13,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class App: Application() {
 
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
-    private var mFirebaseCrashlytics: FirebaseCrashlytics? = null
-    private var mFirebaseAuth: FirebaseAuth? = null
+    var mFirebaseAnalytics: FirebaseAnalytics? = null
+    var mFirebaseCrashlytics: FirebaseCrashlytics? = null
+    var mFirebaseAuth: FirebaseAuth? = null
 
     override fun onCreate() {
         super.onCreate()

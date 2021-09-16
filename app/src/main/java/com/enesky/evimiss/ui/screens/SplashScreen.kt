@@ -18,11 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.enesky.evimiss.R
+import com.enesky.evimiss.main.LOGIN
+import com.enesky.evimiss.main.MAIN
 import com.enesky.evimiss.ui.theme.primaryDark
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(navController: NavController? = null, isUserAvailable: Boolean? = false) {
     val scale = remember { Animatable(0f) }
     LaunchedEffect(key1 = true) {
         scale.animateTo(
@@ -34,9 +36,10 @@ fun SplashScreen(navController: NavController) {
                 }
             )
         )
-        delay(1500L)
-        navController.navigate("main")
-        navController.enableOnBackPressed(false)
+        delay(1000L)
+        val navigateTo = if (isUserAvailable == true) MAIN else LOGIN
+        navController?.navigate(navigateTo)
+        navController?.enableOnBackPressed(false)
     }
 
     Box(
