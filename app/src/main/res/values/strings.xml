@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">Evimiss</string>
-    <string name="title_activity_notes_screen">NotesScreen</string>
+
+    <string name="title_notes">Notes</string>
+    <string name="title_calendar">Calendar</string>
+    <string name="title_expenses">Expenses</string>
+
+    <string name="label_welcome">Welcome!</string>
+    <string name="label_creating_account">Creating Account…</string>
+    <string name="label_sign_up_with_google">Sign Up with Google</string>
+    <string name="label_password">Password</string>
+    <string name="label_log_in">Log In</string>
+    <string name="label_sign_up">Sign Up</string>
+    <string name="label_forgot_password">Forgot Password?</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_expense">Expense</string>
+    <string name="label_today">Today</string>
+    <string name="label_petrol">Petrol</string>
+    <string name="label_expense_type">Expense Type</string>
 </resources>

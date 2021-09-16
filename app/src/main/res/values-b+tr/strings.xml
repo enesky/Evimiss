@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Evimiss</string>
+
+    <string name="title_notes">Notlar</string>
+    <string name="title_calendar">Takvim</string>
+    <string name="title_expenses">Harcamalar</string>
+
+    <string name="label_welcome">Hoşgeldin!</string>
+    <string name="label_creating_account">Hesap Oluşturuluyor…</string>
+    <string name="label_sign_up_with_google">Google ile Kayıt Ol</string>
+    <string name="label_password">Şifre</string>
+    <string name="label_log_in">Giriş Yap</string>
+    <string name="label_sign_up">Kayıt Ol</string>
+    <string name="label_forgot_password">Şifremi Unuttum?</string>
+    <string name="label_email">E-posta</string>
+    <string name="label_expense">Harcama</string>
+    <string name="label_today">Bugün</string>
+    <string name="label_petrol">Benzin</string>
+    <string name="label_expense_type">Harcama Tipi</string>
+</resources>
