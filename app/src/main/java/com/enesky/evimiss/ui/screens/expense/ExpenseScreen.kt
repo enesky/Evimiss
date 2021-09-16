@@ -19,12 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.custom.chart.MyChart
 import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.enesky.evimiss.ui.theme.secondary
@@ -124,7 +126,7 @@ fun ExpenseItem() {
     ) {
         Text(
             modifier = Modifier.padding(4.dp).offset(x = 16.dp),
-            text = "Harcama",
+            text = stringResource(R.string.label_expense),
             color = Color.White,
             style = MaterialTheme.typography.subtitle2
         )

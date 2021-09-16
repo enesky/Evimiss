@@ -53,7 +53,7 @@ fun getDayNames(): List<String> { //listOf("Pzt", "Salı", "Çarş", "Perş", "C
         weekList.add(
             Pair(
                 first = day.dayOfWeek.value,
-                second = day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale("TR"))
+                second = day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
             )
         )
     weekList.sortBy { it.first }
@@ -105,13 +105,13 @@ fun getTodaysMyDate(): MyDate {
 fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean = month.equals(givenDate.month) && year == givenDate.year
 
 fun String.convert2FormattedLocalDate(): LocalDate =
-    LocalDate.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT).withLocale(Locale("TR")))
+    LocalDate.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT))
 
 fun String.convert2DetailedLocalDate(): LocalDate =
-    LocalDate.parse(this, DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR")))
+    LocalDate.parse(this, DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT))
 
 fun LocalDate.convert2DetailedDate(): String =
-    format(DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT).withLocale(Locale("TR")))
+    format(DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT))
 
 fun LocalDate.convert2TimelineDate(): String =
-    format(DateTimeFormatter.ofPattern(TIMELINE_DATE).withLocale(Locale("TR")))
+    format(DateTimeFormatter.ofPattern(TIMELINE_DATE))

@@ -11,8 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.primaryLight
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryDark
@@ -79,7 +81,7 @@ fun Main(modifier: Modifier) {
                     }
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = "Harcama Tipi",
+                        text = stringResource(R.string.label_expense_type),
                         color = Color.White,
                         style = MaterialTheme.typography.caption
                     )

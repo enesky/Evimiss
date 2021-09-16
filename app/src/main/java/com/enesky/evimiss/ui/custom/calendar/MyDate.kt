@@ -10,10 +10,10 @@ import java.util.*
 
 data class MyDate(
     var date: LocalDate,
-    var dayOfWeek: String = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale("TR")), // "Pzt"
+    var dayOfWeek: String = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()), // "Pzt"
     var dayOfWeekValue: Int = date.dayOfWeek.value, // 1
     var dayOfMonth: Int = date.dayOfMonth,// 1
-    var month: String = date.month.getDisplayName(TextStyle.FULL, Locale("TR")),// "Eylül",
+    var month: String = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),// "Eylül",
     var events: List<Int> = (0..(1..3).random()).toList(),
     var hasEvents: Boolean = dayOfMonth % (1..10).random() == 0, //false
     var time: LocalTime = LocalTime.MIN,
