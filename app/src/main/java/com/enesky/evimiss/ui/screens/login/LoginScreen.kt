@@ -30,21 +30,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.enesky.evimiss.R
 import com.enesky.evimiss.main.MAIN
-import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.custom.GoogleButton
 import com.enesky.evimiss.ui.theme.EvimissTheme
-import com.enesky.evimiss.utils.signInAnonymously
+import com.enesky.evimiss.utils.*
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun LoginScreen(navController: NavController? = null) {
 
-    val activity = LocalContext.current as MainActivity
+    val activity = LocalContext.current.activity
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     val isFormValid by derivedStateOf { email.isNotBlank() && password.length >= 7 }
+    var needEmail by remember { mutableStateOf(false) }
 
     EvimissTheme {
         Scaffold(backgroundColor = MaterialTheme.colors.primary) {
@@ -88,8 +88,16 @@ fun LoginScreen(navController: NavController? = null) {
                                 modifier = Modifier.fillMaxWidth(),
                                 value = email,
                                 onValueChange = { email = it },
-                                label = { Text(text = stringResource(R.string.label_email)) },
+                                label = {
+                                    Text(
+                                        text = if (needEmail) stringResource(R.string.label_no_email_error)
+                                               else stringResource(R.string.label_email))
+                                },
                                 singleLine = true,
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email,
+                                    imeAction = ImeAction.Next
+                                ),
                                 trailingIcon = {
                                     if (email.isNotBlank())
                                         IconButton(onClick = { email = "" }) {
@@ -103,14 +111,20 @@ fun LoginScreen(navController: NavController? = null) {
                                     textColor = Color.White,
                                     focusedLabelColor = Color.White,
                                     focusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.IconOpacity)
-                                )
+                                ),
+                                isError = needEmail,
+
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 modifier = Modifier.fillMaxWidth(),
                                 value = password,
                                 onValueChange = { password = it },
-                                label = { Text(text = stringResource(R.string.label_password)) },
+                                label = {
+                                    Text(//TODO: add password errors
+                                        text = stringResource(R.string.label_password)
+                                    )
+                                },
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Password,
@@ -135,29 +149,48 @@ fun LoginScreen(navController: NavController? = null) {
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
-                                onClick = { navController?.navigate(MAIN) },
-                                enabled = isFormValid,
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp)
-                            ) {
-                                Text(text = stringResource(R.string.label_log_in), color = Color.White)
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-                            GoogleButton(
-                                onClicked = {
-                                    //Todo: sign in with google
-                                }
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            TextButton(
-                                modifier = Modifier.padding(4.dp),
                                 onClick = {
-                                    activity.signInAnonymously(
+                                    activity?.createUserWithEmailAndPassword(
+                                        email = email,
+                                        password = password,
                                         onSuccess = {
                                             navController?.navigate(MAIN)
                                         },
                                         onFail = {
-                                            Log.d("Anonymously SignIn", "FAILED")
+                                            Log.d("@@@createUser", "FAILED: $it")
+                                        }
+                                    )
+                                },
+                                enabled = isFormValid,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text(text = stringResource(R.string.label_log_in_sign_up), color = Color.White)
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            GoogleButton {
+                                activity?.signInWithGoogle { credential ->
+                                    activity.signInWithCredential(
+                                        credential = credential,
+                                        onSuccess = {
+                                            navController?.navigate(MAIN)
+                                        },
+                                        onFail = {
+                                            Log.d("@@@signInWithCredential", "FAILED: $it")
+                                        }
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            TextButton(
+                                modifier = Modifier.padding(4.dp),
+                                onClick = {
+                                    activity?.signInAnonymously(
+                                        onSuccess = {
+                                            navController?.navigate(MAIN)
+                                        },
+                                        onFail = {
+                                            Log.d("@@@signInAnonymously", "FAILED: $it")
                                         }
                                     )
                                 }
@@ -165,26 +198,26 @@ fun LoginScreen(navController: NavController? = null) {
                                 Text(text = stringResource(R.string.label_sign_in_anonymously), color = Color.White)
                             }
                             Spacer(modifier = Modifier.weight(1f))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            TextButton(
+                                modifier = Modifier.padding(4.dp),
+                                onClick = {
+                                    if (email.isNullOrEmpty()) {
+                                        needEmail = true
+                                        return@TextButton
+                                    }
+                                    needEmail = false
+                                    activity?.forgotPassword(
+                                        email = email,
+                                        onSuccess = {
+                                            navController?.navigate(MAIN)
+                                        },
+                                        onFail = {
+                                            Log.d("@@@forgotPassword", "FAILED: $it")
+                                        }
+                                    )
+                                }
                             ) {
-                                TextButton(
-                                    modifier = Modifier.padding(4.dp),
-                                    onClick = {
-                                        //Todo: navigate to signup screen
-                                    }
-                                ) {
-                                    Text(text = stringResource(R.string.label_sign_up), color = Color.White)
-                                }
-                                TextButton(
-                                    modifier = Modifier.padding(4.dp),
-                                    onClick = {
-                                        //Todo: navigate to forgot password screen
-                                    }
-                                ) {
-                                    Text(text = stringResource(R.string.label_forgot_password), color = Color.White)
-                                }
+                                Text(text = stringResource(R.string.label_forgot_password), color = Color.White)
                             }
                         }
                     }

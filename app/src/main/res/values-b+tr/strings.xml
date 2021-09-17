@@ -6,10 +6,10 @@
     <string name="title_expenses">Harcamalar</string>
 
     <string name="label_welcome">Hoşgeldin!</string>
-    <string name="label_creating_account">Hesap Oluşturuluyor…</string>
-    <string name="label_sign_up_with_google">Google ile Kayıt Ol</string>
+    <string name="label_creating_account">Yükleniyor…</string>
+    <string name="label_sign_up_with_google">Google ile devam et</string>
     <string name="label_password">Şifre</string>
-    <string name="label_log_in">Giriş Yap</string>
+    <string name="label_log_in_sign_up">Giriş Yap / Kayıt Ol</string>
     <string name="label_sign_up">Kayıt Ol</string>
     <string name="label_forgot_password">Şifremi Unuttum?</string>
     <string name="label_email">E-posta</string>
@@ -18,4 +18,7 @@
     <string name="label_petrol">Benzin</string>
     <string name="label_expense_type">Harcama Tipi</string>
     <string name="label_sign_in_anonymously">Misafir olarak giriş yap</string>
+
+    <string name="label_no_email_error">Lütfen e-posta girişi yapınız.</string>
+    <string name="label_not_valid_password">Lütfen geçerli bir şifre giriniz.</string>
 </resources>

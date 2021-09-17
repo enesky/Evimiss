@@ -1,5 +1,7 @@
 package com.enesky.evimiss.utils
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -31,3 +33,14 @@ fun MainActivity.restart() {
     newIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     startActivity(newIntent)
 }
+
+@ExperimentalAnimationApi
+private tailrec fun Context.getMainActivity(): MainActivity? = when (this) {
+    is MainActivity -> this
+    is ContextWrapper -> baseContext.getMainActivity()
+    else -> null
+}
+
+@ExperimentalAnimationApi
+val Context.activity: MainActivity?
+    get() = getMainActivity()
