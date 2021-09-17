@@ -20,11 +20,21 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            debuggable true
+            versionNameSuffix "-debug"
+            buildConfigField "String", "MODE", '"DEBUG"'
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            buildConfigField "String", "MODE", '"PROD"'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
