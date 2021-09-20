@@ -41,6 +41,7 @@ import com.enesky.evimiss.utils.convert2TimelineDate
 import com.enesky.evimiss.utils.getToday
 import com.enesky.evimiss.utils.restart
 import com.enesky.evimiss.utils.signOut
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @ExperimentalAnimationApi
 @Composable
@@ -172,6 +173,7 @@ fun ExpenseItem() {
     }
 }
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable

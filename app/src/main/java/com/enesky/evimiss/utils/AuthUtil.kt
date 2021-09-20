@@ -1,18 +1,9 @@
 package com.enesky.evimiss.utils
 
 import android.app.Activity
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import com.enesky.evimiss.App
-import com.enesky.evimiss.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.GoogleAuthProvider
 
 fun Activity.createUserWithEmailAndPassword(
     email: String,
@@ -80,7 +71,6 @@ fun Activity.forgotPassword(
             onSuccess?.invoke()
         else
             onFail?.invoke(task.exception?.message.toString())
-
     }
 }
 

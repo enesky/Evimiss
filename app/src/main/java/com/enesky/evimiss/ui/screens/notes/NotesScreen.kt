@@ -1,5 +1,6 @@
 package com.enesky.evimiss.ui.screens.notes
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.enesky.evimiss.ui.theme.white
 import com.enesky.evimiss.ui.theme.primary
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @Composable
 fun NotesScreen() {
@@ -37,6 +39,8 @@ fun NotesScreen() {
     }
 }
 
+@ExperimentalAnimationApi
+@ExperimentalPermissionsApi
 @Preview(showBackground = true)
 @Composable
 fun NotesScreenPreview() {

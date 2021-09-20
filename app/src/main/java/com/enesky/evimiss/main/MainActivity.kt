@@ -11,10 +11,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import com.enesky.evimiss.App
 import com.enesky.evimiss.R
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
     private var isUserAvailable: Boolean = false
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    var listener: ((credential: AuthCredential) -> Unit)? = null
+    private var credentialListener: ((credential: AuthCredential) -> Unit)? = null
 
     override fun onStart() {
         super.onStart()
@@ -32,6 +34,7 @@ class MainActivity : ComponentActivity() {
         isUserAvailable = currentUser != null
     }
 
+    @ExperimentalPermissionsApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 try {
                     val account = task.getResult(ApiException::class.java)!!
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                    listener?.invoke(credential)
+                    credentialListener?.invoke(credential)
                 } catch (e: ApiException) {
                     Log.d("Google Sign-In", "Google sign in failed", e)
                 }
@@ -57,13 +60,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun signInWithGoogle(l: (credential: AuthCredential) -> Unit) {
+    fun signInWithGoogle(listener: (credential: AuthCredential) -> Unit) {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
+            .requestScopes(Scope("https://www.googleapis.com/auth/calendar"))
+            .requestScopes(Scope("https://www.googleapis.com/auth/calendar.events"))
+            .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
+            .requestScopes(Scope("https://www.googleapis.com/auth/spreadsheets"))
             .build()
 
-        listener = l
+        credentialListener = listener
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         resultLauncher.launch(googleSignInClient.signInIntent)

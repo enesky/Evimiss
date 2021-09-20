@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.enesky.evimiss.ui.custom.calendar.MyCalendar
 import com.enesky.evimiss.ui.screens.main.MainScaffold
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @ExperimentalAnimationApi
 @Composable
@@ -28,6 +29,7 @@ fun CalendarScreen() {
 }
 
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable

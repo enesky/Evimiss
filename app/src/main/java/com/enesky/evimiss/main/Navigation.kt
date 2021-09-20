@@ -14,6 +14,7 @@ import com.enesky.evimiss.ui.screens.notes.NotesScreen
 import com.enesky.evimiss.ui.screens.SplashScreen
 import com.enesky.evimiss.ui.screens.login.LoginScreen
 import com.enesky.evimiss.ui.screens.main.MainScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 const val SPLASH = "splash"
 const val LOGIN = "login"
@@ -32,6 +33,7 @@ fun BottomNavigation(navController: NavHostController) {
     }
 }
 
+@ExperimentalPermissionsApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable

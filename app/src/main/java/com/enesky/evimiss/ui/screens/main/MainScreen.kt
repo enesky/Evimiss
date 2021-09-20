@@ -8,17 +8,23 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.enesky.evimiss.main.BottomNavigation
+import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.scaffold.FloatingAddButton
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNav
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.primary
 import com.enesky.evimiss.ui.theme.primaryDark
+import com.enesky.evimiss.utils.CalendarUtil.getCalendarAddEvent
+import com.enesky.evimiss.utils.PermissionsUtil
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@ExperimentalPermissionsApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -30,8 +36,12 @@ fun MainScreen() {
     )
 }
 
+@ExperimentalPermissionsApi
+@ExperimentalAnimationApi
 @Composable
 fun MainScaffold(content: @Composable () -> Unit, navController: NavController? = null) {
+    val activity = LocalContext.current as MainActivity
+
     EvimissTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -44,10 +54,8 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
                 }
             },
             floatingActionButton = {
-                FloatingAddButton {
-                    /*
-                        Todo: Add bottom sheet here
-                     */
+                FloatingAddButton() {
+                    activity?.getCalendarAddEvent()
                 }
             },
             isFloatingActionButtonDocked = true,
@@ -56,8 +64,11 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
             content()
         }
     }
+
+    PermissionsUtil().requestPermissions {}
 }
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
