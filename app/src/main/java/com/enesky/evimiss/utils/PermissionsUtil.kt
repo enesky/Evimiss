@@ -1,12 +1,15 @@
 package com.enesky.evimiss.utils
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.*
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.enesky.evimiss.R
+import com.enesky.evimiss.main.MainActivity
+import com.enesky.evimiss.ui.custom.Alert
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 /**
  * Created by Enes Kamil YILMAZ on 19/09/2021
@@ -14,53 +17,65 @@ import com.google.accompanist.permissions.*
 
 object PermissionsUtil {
 
-    val readCalendar: String = android.Manifest.permission.READ_CALENDAR
-    val writeCalendar: String = android.Manifest.permission.WRITE_CALENDAR
-    val fineLocation: String = android.Manifest.permission.ACCESS_FINE_LOCATION
-    val coarseLocation: String = android.Manifest.permission.ACCESS_COARSE_LOCATION
+    private const val readCalendar: String = android.Manifest.permission.READ_CALENDAR
+    private const val writeCalendar: String = android.Manifest.permission.WRITE_CALENDAR
+    private const val fineLocation: String = android.Manifest.permission.ACCESS_FINE_LOCATION
+    private const val coarseLocation: String = android.Manifest.permission.ACCESS_COARSE_LOCATION
 
+    @ExperimentalAnimationApi
     @ExperimentalPermissionsApi
     @Composable
-    fun requestPermissions(
-        permissions: List<String> = listOf<String>(),
-        onSuccess: @Composable (() -> Unit)
-    ) {
-        // Track if the user doesn't want to see the rationale any more.
-        var doNotShowRationale by remember { mutableStateOf(false) }
+    fun RequestCalendarPermissions(onPermissionsGranted: @Composable () -> Unit) {
+        val activity = LocalContext.current as MainActivity
+        RequestPermissions(
+            permissions = listOf(readCalendar, writeCalendar),
+            onPermissionsGranted = onPermissionsGranted,
+            onPermissionsNotAvailable = { activity.openSettings() }
+        )
+    }
 
-        val calendarPermissionState = rememberMultiplePermissionsState(permissions)
+    @ExperimentalAnimationApi
+    @ExperimentalPermissionsApi
+    @Composable
+    fun RequestLocationsPermissions(onPermissionsGranted: @Composable () -> Unit) {
+        val activity = LocalContext.current as MainActivity
+        RequestPermissions(
+            permissions = listOf(fineLocation, coarseLocation),
+            onPermissionsGranted = onPermissionsGranted,
+            onPermissionsNotAvailable = { activity.openSettings() }
+        )
+    }
+
+    @ExperimentalAnimationApi
+    @ExperimentalPermissionsApi
+    @Composable
+    private fun RequestPermissions(
+        permissions: List<String> = listOf(),
+        onPermissionsGranted: @Composable () -> Unit,
+        onPermissionsNotAvailable: () -> Unit
+    ) {
+        val permissionsState = rememberMultiplePermissionsState(permissions)
+        val permissionName = if (permissions.contains(readCalendar)) "Calendar" else "Location"
+
         PermissionsRequired(
-            multiplePermissionsState = calendarPermissionState,
+            multiplePermissionsState = permissionsState,
             permissionsNotGrantedContent = {
-                Column {
-                        Text("The calendar is important for this app. Please grant the permission.")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row {
-                            Button(onClick = { calendarPermissionState.launchMultiplePermissionRequest() }) {
-                                Text("Ok!")
-                            }
-                            Spacer(Modifier.width(8.dp))
-                            Button(onClick = { doNotShowRationale = true }) {
-                                Text("Nope")
-                            }
-                        }
-                    }
+                Alert(
+                    title = stringResource(R.string.label_permission_needed, permissionName),
+                    description = stringResource(R.string.label_permission_needed_desc, permissionName),
+                    onConfirm = { permissionsState.launchMultiplePermissionRequest() },
+                )
             },
             permissionsNotAvailableContent = {
-                Column {
-                    Text(
-                        "Calendar permission denied. See this FAQ with information about why we " +
-                                "need this permission. Please, grant us access on the Settings screen."
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { }) {
-                        Text("Open Settings")
-                    }
-                }
+                Alert(
+                    title = stringResource(R.string.label_permission_denied, permissionName),
+                    description = stringResource(R.string.label_permission_denied_desc, permissionName),
+                    confirmButtonText = stringResource(R.string.label_open_settings),
+                    onConfirm = { onPermissionsNotAvailable() },
+                )
             }
         ) {
-            //Permission Granted
-            onSuccess()
+            onPermissionsGranted()
         }
     }
 

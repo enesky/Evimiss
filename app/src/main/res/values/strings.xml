@@ -21,4 +21,12 @@
 
     <string name="label_no_email_error">Please enter your e-mail.</string>
     <string name="label_not_valid_password">Please enter valid password.</string>
+
+    <string name="label_permission_needed">%s Permission Needed</string>
+    <string name="label_permission_denied">%s Permission Denied</string>
+    <string name="label_permission_needed_desc">%s permission is important for this app.\nPlease grant the permission.</string>
+    <string name="label_permission_denied_desc">%s permission denied.\nPlease, grant access on the Settings screen.</string>
+    <string name="label_open_settings">Open Settings</string>
+    <string name="label_dismiss">Dismiss</string>
+    <string name="label_confirm">Confirm</string>
 </resources>

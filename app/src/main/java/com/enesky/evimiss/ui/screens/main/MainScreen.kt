@@ -20,7 +20,7 @@ import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.primary
 import com.enesky.evimiss.ui.theme.primaryDark
-import com.enesky.evimiss.utils.CalendarUtil.getCalendarAddEvent
+import com.enesky.evimiss.utils.CalendarUtil
 import com.enesky.evimiss.utils.PermissionsUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -42,6 +42,12 @@ fun MainScreen() {
 fun MainScaffold(content: @Composable () -> Unit, navController: NavController? = null) {
     val activity = LocalContext.current as MainActivity
 
+    PermissionsUtil.RequestCalendarPermissions(
+        onPermissionsGranted = {
+            CalendarUtil.getCalendarEvents(activity.contentResolver)
+        }
+    )
+
     EvimissTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -55,7 +61,7 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
             },
             floatingActionButton = {
                 FloatingAddButton() {
-                    activity?.getCalendarAddEvent()
+                    // Todo:
                 }
             },
             isFloatingActionButtonDocked = true,
@@ -64,8 +70,6 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
             content()
         }
     }
-
-    PermissionsUtil().requestPermissions {}
 }
 
 @ExperimentalPermissionsApi

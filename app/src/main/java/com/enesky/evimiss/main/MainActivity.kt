@@ -49,8 +49,8 @@ class MainActivity : ComponentActivity() {
             if (result.resultCode == RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 try {
-                    val account = task.getResult(ApiException::class.java)!!
-                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                    val account = task.getResult(ApiException::class.java)
+                    val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
                     credentialListener?.invoke(credential)
                 } catch (e: ApiException) {
                     Log.d("Google Sign-In", "Google sign in failed", e)

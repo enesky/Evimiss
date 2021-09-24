@@ -28,7 +28,6 @@ fun CalendarScreen() {
     }
 }
 
-
 @ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)

@@ -1,8 +1,11 @@
 package com.enesky.evimiss.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
@@ -44,3 +47,9 @@ private tailrec fun Context.getMainActivity(): MainActivity? = when (this) {
 @ExperimentalAnimationApi
 val Context.activity: MainActivity?
     get() = getMainActivity()
+
+fun Activity.openSettings() {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+    intent.data = Uri.fromParts("package", packageName, null)
+    startActivity(intent)
+}

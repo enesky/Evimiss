@@ -21,4 +21,12 @@
 
     <string name="label_no_email_error">Lütfen e-posta girişi yapınız.</string>
     <string name="label_not_valid_password">Lütfen geçerli bir şifre giriniz.</string>
+
+    <string name="label_permission_needed">%s İzni Gerekli</string>
+    <string name="label_permission_denied">%s İzni Reddedildi</string>
+    <string name="label_permission_needed_desc">%s izniniz gerekiyor.\nLütfen izin verin.</string>
+    <string name="label_permission_denied_desc">%s izin reddedildi.\nLütfen ayarlar ekranından izin verin.</string>
+    <string name="label_open_settings">Ayarları Aç</string>
+    <string name="label_dismiss">Kapat</string>
+    <string name="label_confirm">Kabul Et</string>
 </resources>
