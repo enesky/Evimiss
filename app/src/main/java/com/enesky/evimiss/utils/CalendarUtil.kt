@@ -30,25 +30,21 @@ object CalendarUtil {
     fun getCalendarEvents(
         contentResolver: ContentResolver
     ) {
-        val uri: Uri = CalendarContract.Calendars.CONTENT_URI
-        val selection: String =
-            "((${CalendarContract.Calendars.ACCOUNT_NAME} = ?) AND " +
-            "(${CalendarContract.Calendars.ACCOUNT_TYPE} = ?) AND " +
-            "(${CalendarContract.Calendars.OWNER_ACCOUNT} = ?))"
-        val selectionArgs: Array<String> = arrayOf(
-            "eneskamilyilmaz@gmail.com",
-            CalendarContract.ACCOUNT_TYPE_LOCAL,
-            "eneskamilyilmaz@gmail.com"
-        )
-        val cur: Cursor? = contentResolver.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
+        val cur: Cursor? = contentResolver.query(
+            Uri.parse("content://com.android.calendar/events"),
+            arrayOf("calendar_id", "title", "description", "dtstart", "dtend", "eventLocation"),
+            null, null, null);
 
         while (cur?.moveToNext() == true) {
-            val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
-            val displayName: String = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
-            val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
-            val ownerName: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
+            val calendarId = cur.getString(0)
+            val title = cur.getString(1)
+            val description = cur.getString(2)
+            val dtstart = cur.getString(3)
+            val dtend = cur.getString(4)
+            val eventLocation = cur.getString(5)
 
-            Log.d("CalendarUtil", "@@@@ calId: $calID, displayName: $displayName, accountName: $accountName, ownerName: $ownerName,")
+            Log.d("CalendarUtil", "@@@@ calendarId: $calendarId, title: $title," +
+                    " description: $description, dtstart: $dtstart, dtend: $dtend, eventLocation: $eventLocation @@@@")
         }
     }
 
