@@ -12,25 +12,27 @@ import com.google.accompanist.permissions.*
  * Created by Enes Kamil YILMAZ on 19/09/2021
  */
 
-class PermissionsUtil {
+object PermissionsUtil {
+
+    val readCalendar: String = android.Manifest.permission.READ_CALENDAR
+    val writeCalendar: String = android.Manifest.permission.WRITE_CALENDAR
+    val fineLocation: String = android.Manifest.permission.ACCESS_FINE_LOCATION
+    val coarseLocation: String = android.Manifest.permission.ACCESS_COARSE_LOCATION
 
     @ExperimentalPermissionsApi
     @Composable
-    fun requestPermissions(onSuccess: @Composable (() -> Unit)) {
+    fun requestPermissions(
+        permissions: List<String> = listOf<String>(),
+        onSuccess: @Composable (() -> Unit)
+    ) {
         // Track if the user doesn't want to see the rationale any more.
         var doNotShowRationale by remember { mutableStateOf(false) }
 
-        val calendarPermissionState = rememberMultiplePermissionsState(listOf(
-            android.Manifest.permission.READ_CALENDAR,
-            android.Manifest.permission.WRITE_CALENDAR
-        ))
+        val calendarPermissionState = rememberMultiplePermissionsState(permissions)
         PermissionsRequired(
             multiplePermissionsState = calendarPermissionState,
             permissionsNotGrantedContent = {
-                if (doNotShowRationale) {
-                    Text("Feature not available")
-                } else {
-                    Column {
+                Column {
                         Text("The calendar is important for this app. Please grant the permission.")
                         Spacer(modifier = Modifier.height(8.dp))
                         Row {
@@ -43,7 +45,6 @@ class PermissionsUtil {
                             }
                         }
                     }
-                }
             },
             permissionsNotAvailableContent = {
                 Column {
@@ -52,14 +53,13 @@ class PermissionsUtil {
                                 "need this permission. Please, grant us access on the Settings screen."
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { //todo
-                         }) {
+                    Button(onClick = { }) {
                         Text("Open Settings")
                     }
                 }
             }
         ) {
-            Text("Calendar permission Granted")
+            //Permission Granted
             onSuccess()
         }
     }

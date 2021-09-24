@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
-import org.threeten.bp.YearMonth
+import android.util.Log
 import java.util.*
 
 /**
@@ -32,10 +32,11 @@ object CalendarUtil {
     fun Activity.getCalendarAddEvent() {
         // Run query
         val uri: Uri = CalendarContract.Calendars.CONTENT_URI
-        val selection: String = "((${CalendarContract.Calendars.ACCOUNT_NAME} = ?) AND (" +
+        val selection: String =
+            "((${CalendarContract.Calendars.ACCOUNT_NAME} = ?) AND (" +
                 "${CalendarContract.Calendars.ACCOUNT_TYPE} = ?) AND (" +
                 "${CalendarContract.Calendars.OWNER_ACCOUNT} = ?))"
-        val selectionArgs: Array<String> = arrayOf("eneskamilyilmaz@gmail.com", "com.example", "eneskamilyilmaz@gmail.com")
+        val selectionArgs: Array<String> = arrayOf("eneskamilyilmaz@gmail.com", CalendarContract.ACCOUNT_TYPE_LOCAL, "eneskamilyilmaz@gmail.com")
         val cur: Cursor? = contentResolver.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
 
         // Use the cursor to step through the returned records
@@ -46,15 +47,21 @@ object CalendarUtil {
             val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
             val ownerName: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
             // Do something with the values...
+            Log.d("CalendarUtil", "@@@@ calId: $calID, displayName: $displayName, accountName: $accountName, ownerName: $ownerName,")
         }
 
+        addEvent()
+    }
+
+
+    fun Activity.addEvent() {
         val calID: Long = 3
         val startMillis: Long = Calendar.getInstance().run {
-            set(2021, 9, 19, 14, 30)
+            set(2021, 8, 19, 11, 30)
             timeInMillis
         }
         val endMillis: Long = Calendar.getInstance().run {
-            set(2021, 9, 19, 14, 45)
+            set(2021, 8, 19, 12, 45)
             timeInMillis
         }
 
@@ -68,5 +75,4 @@ object CalendarUtil {
         }
         contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
     }
-
 }
