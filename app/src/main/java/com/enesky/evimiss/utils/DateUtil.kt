@@ -1,7 +1,10 @@
 package com.enesky.evimiss.utils
 
 import com.enesky.evimiss.ui.custom.calendar.MyDate
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
 import java.util.*
@@ -9,6 +12,7 @@ import kotlin.Exception as KotlinException
 
 const val DATE_FORMAT = "yyyy-MM-dd"
 const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
+const val DETAILED_DATE_TIME_FORMAT = "dd MMMM EEEE, yyyy, hh:mm:ss"
 const val TIMELINE_DATE = "MMMM, yyyy"
 const val TEST_DATE = "2021-09-16"
 
@@ -115,3 +119,12 @@ fun LocalDate.convert2DetailedDate(): String =
 
 fun LocalDate.convert2TimelineDate(): String =
     format(DateTimeFormatter.ofPattern(TIMELINE_DATE))
+
+fun LocalDateTime.convert2DetailedDateTime(): String =
+    format(DateTimeFormatter.ofPattern(DETAILED_DATE_TIME_FORMAT))
+
+fun Long.convert2DetailedDateTime(): String =
+    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime().convert2DetailedDateTime()
+
+fun LocalDateTime.getMillis(): Long =
+    atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

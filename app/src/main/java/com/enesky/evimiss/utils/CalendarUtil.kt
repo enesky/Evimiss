@@ -3,10 +3,10 @@ package com.enesky.evimiss.utils
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.database.Cursor
-import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import com.enesky.evimiss.ui.theme.secondary
+import org.threeten.bp.LocalDateTime
 import java.util.*
 
 /**
@@ -15,55 +15,106 @@ import java.util.*
 
 object CalendarUtil {
 
-    private val EVENT_PROJECTION: Array<String> = arrayOf(
-        CalendarContract.Calendars._ID,                     // 0
-        CalendarContract.Calendars.ACCOUNT_NAME,            // 1
-        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,   // 2
-        CalendarContract.Calendars.OWNER_ACCOUNT            // 3
+    private val CALENDAR_CONTENT_URI = CalendarContract.Calendars.CONTENT_URI
+    private val CALENDAR_PROJECTION = arrayOf(
+        CalendarContract.Calendars._ID,            //0
+        CalendarContract.Calendars.ACCOUNT_NAME    //1
+        //CalendarContract.Calendars.NAME,
+        //CalendarContract.Calendars.OWNER_ACCOUNT,
+    )
+    private val calendarIdList = mutableListOf<String>()
+
+    private val EVENT_CONTENT_URI = CalendarContract.Events.CONTENT_URI
+    private val EVENT_PROJECTION = arrayOf(
+        CalendarContract.Events.CALENDAR_ID,      //0
+        CalendarContract.Events.TITLE,            //1
+        CalendarContract.Events.DESCRIPTION,      //2
+        CalendarContract.Events.DTSTART,          //3
+        CalendarContract.Events.DTEND,            //4
+        CalendarContract.Events.EVENT_LOCATION,   //5
+        CalendarContract.Events.DELETED,          //6
+    )
+    private var EVENT_SELECTION = "(" +
+            //"(${CalendarContract.Events.DTSTART} + >= ?) AND " +
+            //"(${CalendarContract.Events.DTEND}} <= ?) AND " +
+            "(${CalendarContract.Events.DELETED} = ?) AND " +
+            "(${CalendarContract.Events.CALENDAR_ID} = ?)" +
+            ")"
+
+    private val EVENT_SELECTION_ARGS = mutableListOf(
+        "0", //Deleted == false
     )
 
-    private const val PROJECTION_ID_INDEX: Int = 0
-    private const val PROJECTION_ACCOUNT_NAME_INDEX: Int = 1
-    private const val PROJECTION_DISPLAY_NAME_INDEX: Int = 2
-    private const val PROJECTION_OWNER_ACCOUNT_INDEX: Int = 3
+    private const val SORT_ORDER = CalendarContract.EventsEntity.DTSTART + " ASC"
 
-    fun getCalendarEvents(
-        contentResolver: ContentResolver
-    ) {
-        val cur: Cursor? = contentResolver.query(
-            Uri.parse("content://com.android.calendar/events"),
-            arrayOf("calendar_id", "title", "description", "dtstart", "dtend", "eventLocation"),
-            null, null, null);
+    fun getCalendarEvents(contentResolver: ContentResolver) {
+        val calendarCursor: Cursor? = contentResolver.query(
+            CALENDAR_CONTENT_URI,
+            CALENDAR_PROJECTION,
+            null, null, null)
+        while (calendarCursor?.moveToNext() == true) {
+            val id = calendarCursor.getString(0)
+            val accountName = calendarCursor.getString(1)
 
-        while (cur?.moveToNext() == true) {
-            val calendarId = cur.getString(0)
-            val title = cur.getString(1)
-            val description = cur.getString(2)
-            val dtstart = cur.getString(3)
-            val dtend = cur.getString(4)
-            val eventLocation = cur.getString(5)
+            //Get users calendar id numbers
+            if (accountName == getUserEmail() || isAnonymous() == true) //TODO: Add partner emails here
+                calendarIdList.add(id)
+        }
 
-            Log.d("CalendarUtil", "@@@@ calendarId: $calendarId, title: $title," +
-                    " description: $description, dtstart: $dtstart, dtend: $dtend, eventLocation: $eventLocation @@@@")
+        //Add CalendarIDs to EVENT_SELECTION_ARGS
+        for (calendar in calendarIdList)
+            EVENT_SELECTION_ARGS.add(calendar)
+
+        //Update Selection if more than 1 calendar available
+        if (calendarIdList.size > 1) {
+            EVENT_SELECTION = EVENT_SELECTION.apply {
+                dropLast(1) // Delete character ')'
+                for (calendar in 1 until calendarIdList.size)
+                    plus(" OR (${CalendarContract.Events.CALENDAR_ID} = ?)")
+                plus(')') // Add deleted character ')'
+            }
+        }
+
+        val eventCursor: Cursor? = contentResolver.query(
+            EVENT_CONTENT_URI,
+            EVENT_PROJECTION,
+            EVENT_SELECTION,
+            EVENT_SELECTION_ARGS.toTypedArray(),
+            SORT_ORDER
+        )
+
+        while (eventCursor?.moveToNext() == true) {
+            val calendarId = eventCursor.getString(0)
+            val title = eventCursor.getString(1)
+            val description = eventCursor.getString(2)
+            val dtstart = eventCursor.getLong(3)
+            val dtend = eventCursor.getLong(4)
+            val location = eventCursor.getString(5)
+            val deleted = eventCursor.getString(6)
+            Log.d("CalendarUtil - Events",
+                "CalendarId: $calendarId, " +
+                      "Title: $title, Description: $description, " +
+                      "Start Date: ${dtstart.convert2DetailedDateTime()}, " +
+                      "End Date: ${dtend.convert2DetailedDateTime()}, " +
+                      "Deleted: ${deleted != "0"}, Location: $location")
         }
     }
 
     fun addEvent(
         contentResolver: ContentResolver,
+        calendarID: String,
         title: String,
         description: String? = "",
-        startMillis: Long,
-        endMillis: Long
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
     ) {
-        val calendarID: Long = 3
-
         val values = ContentValues().apply {
             CalendarContract.Events.CALENDAR_ID to calendarID
-            CalendarContract.Events.DTSTART to startMillis
-            CalendarContract.Events.DTEND to endMillis
-            CalendarContract.Events.EVENT_TIMEZONE to TimeZone.getDefault().displayName
             CalendarContract.Events.TITLE to title
             CalendarContract.Events.DESCRIPTION to description
+            CalendarContract.Events.DTSTART to startDateTime.getMillis()
+            CalendarContract.Events.DTEND to endDateTime.getMillis()
+            CalendarContract.Events.EVENT_TIMEZONE to TimeZone.getDefault().displayName
             CalendarContract.Events.CALENDAR_COLOR_KEY to secondary
         }
         contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
