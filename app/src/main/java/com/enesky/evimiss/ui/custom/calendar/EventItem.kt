@@ -1,6 +1,5 @@
 package com.enesky.evimiss.ui.custom.calendar
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
 import com.enesky.evimiss.data.EventEntity
 import com.enesky.evimiss.ui.theme.secondary
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @Composable
 fun EventItem(eventEntity: EventEntity) {
@@ -76,8 +74,6 @@ fun EventItem(eventEntity: EventEntity) {
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalPermissionsApi
 @Composable
 @Preview
 fun EventItemsPreview() {

@@ -1,10 +1,8 @@
 package com.enesky.evimiss.ui.screens.main
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomAppBar
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,11 +20,7 @@ import com.enesky.evimiss.ui.theme.primary
 import com.enesky.evimiss.ui.theme.primaryDark
 import com.enesky.evimiss.utils.CalendarUtil
 import com.enesky.evimiss.utils.PermissionsUtil
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
-@ExperimentalPermissionsApi
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -36,8 +30,6 @@ fun MainScreen() {
     )
 }
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Composable
 fun MainScaffold(content: @Composable () -> Unit, navController: NavController? = null) {
     val activity = LocalContext.current as MainActivity
@@ -73,8 +65,6 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
     }
 }
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {

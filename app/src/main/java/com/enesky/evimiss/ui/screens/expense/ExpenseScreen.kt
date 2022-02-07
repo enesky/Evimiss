@@ -1,6 +1,5 @@
 package com.enesky.evimiss.ui.screens.expense
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -41,9 +40,7 @@ import com.enesky.evimiss.utils.convert2TimelineDate
 import com.enesky.evimiss.utils.getToday
 import com.enesky.evimiss.utils.restart
 import com.enesky.evimiss.utils.signOut
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
-@ExperimentalAnimationApi
 @Composable
 fun ExpenseScreen() {
 
@@ -173,8 +170,6 @@ fun ExpenseItem() {
     }
 }
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun ExpenseScreenPreview() {

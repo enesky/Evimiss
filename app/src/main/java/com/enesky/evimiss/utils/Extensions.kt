@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
@@ -30,21 +29,18 @@ inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modif
 
 fun getString(@StringRes id : Int) = App.mInstance.getString(id)
 
-@ExperimentalAnimationApi
 fun MainActivity.restart() {
     val newIntent = intent
     newIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     startActivity(newIntent)
 }
 
-@ExperimentalAnimationApi
 private tailrec fun Context.getMainActivity(): MainActivity? = when (this) {
     is MainActivity -> this
     is ContextWrapper -> baseContext.getMainActivity()
     else -> null
 }
 
-@ExperimentalAnimationApi
 val Context.activity: MainActivity?
     get() = getMainActivity()
 

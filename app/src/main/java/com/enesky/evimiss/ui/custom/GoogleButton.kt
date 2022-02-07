@@ -17,9 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.enesky.evimiss.R
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.Shapes
-import com.enesky.evimiss.ui.theme.primaryLight
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GoogleButton(
     text: String = stringResource(R.string.label_sign_up_with_google),
@@ -73,7 +72,6 @@ fun GoogleButton(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 @Preview
 private fun GoogleButtonPreview() {

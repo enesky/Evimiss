@@ -1,6 +1,5 @@
 package com.enesky.evimiss.utils
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,8 +21,6 @@ object PermissionsUtil {
     private const val fineLocation: String = android.Manifest.permission.ACCESS_FINE_LOCATION
     private const val coarseLocation: String = android.Manifest.permission.ACCESS_COARSE_LOCATION
 
-    @ExperimentalAnimationApi
-    @ExperimentalPermissionsApi
     @Composable
     fun RequestCalendarPermissions(onPermissionsGranted: @Composable () -> Unit) {
         val activity = LocalContext.current as MainActivity
@@ -34,8 +31,6 @@ object PermissionsUtil {
         )
     }
 
-    @ExperimentalAnimationApi
-    @ExperimentalPermissionsApi
     @Composable
     fun RequestLocationsPermissions(onPermissionsGranted: @Composable () -> Unit) {
         val activity = LocalContext.current as MainActivity
@@ -46,8 +41,7 @@ object PermissionsUtil {
         )
     }
 
-    @ExperimentalAnimationApi
-    @ExperimentalPermissionsApi
+    @OptIn(ExperimentalPermissionsApi::class)
     @Composable
     private fun RequestPermissions(
         permissions: List<String> = listOf(),

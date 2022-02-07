@@ -1,7 +1,6 @@
 package com.enesky.evimiss.ui.screens.login
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,8 +33,7 @@ import com.enesky.evimiss.ui.custom.GoogleButton
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.utils.*
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LoginScreen(navController: NavController? = null) {
 
@@ -227,8 +225,6 @@ fun LoginScreen(navController: NavController? = null) {
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {

@@ -27,31 +27,24 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
-import com.enesky.evimiss.data.EventEntity
 import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
 import com.enesky.evimiss.utils.*
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import org.threeten.bp.LocalDate
 
 /**
  * Created by Enes Kamil YILMAZ on 04/09/2021
  */
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Composable
 fun MyCalendar() {
     Main()
 }
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Composable
 fun Main() {
     val activity = LocalContext.current as MainActivity
@@ -81,7 +74,7 @@ fun Main() {
     }
 }
 
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Column {
@@ -281,7 +274,6 @@ fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
         }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
@@ -308,8 +300,6 @@ fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
     else -> Color.White
 }
 
-@ExperimentalPermissionsApi
-@ExperimentalAnimationApi
 @Preview
 @Composable
 fun PreviewMyCalendar() {

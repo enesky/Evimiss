@@ -7,20 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.ExperimentalMaterialApi
 import com.enesky.evimiss.App
 import com.enesky.evimiss.R
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 
-@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
     private var isUserAvailable: Boolean = false
@@ -34,8 +29,6 @@ class MainActivity : ComponentActivity() {
         isUserAvailable = currentUser != null
     }
 
-    @ExperimentalPermissionsApi
-    @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { NavigationFromSplash(isUserAvailable) }
