@@ -48,8 +48,8 @@ object CalendarUtil {
     private val EVENT_SELECTION_ARGS = mutableListOf<String>()
     private const val EVENTS_SORT_ORDER = "${CalendarContract.Events.DTSTART} ASC"
 
-    fun getCalendars(contentResolver: ContentResolver) {
-        val calendarCursor: Cursor? = contentResolver.query(
+    fun getCalendars(contentResolver: ContentResolver?) {
+        val calendarCursor: Cursor? = contentResolver?.query(
             CALENDAR_CONTENT_URI, CALENDAR_PROJECTION, null,
             null, CALENDARS_SORT_ORDER
         )
@@ -102,7 +102,7 @@ object CalendarUtil {
     }
 
     fun getCalendarEventsInGivenDatesMonth(
-        contentResolver: ContentResolver,
+        contentResolver: ContentResolver?,
         givenDate: LocalDate? = null
     ): MutableList<EventEntity> {
         val startEndMillis = getMonthsStartEndMillis(givenDate)
@@ -112,7 +112,7 @@ object CalendarUtil {
         if (EVENT_SELECTION_WITH_DATE.contains(calendarIdQuery).not())
             EVENT_SELECTION_WITH_DATE = "$calendarIdQuery AND $EVENT_SELECTION_WITH_DATE"
 
-        val eventCursor: Cursor? = contentResolver.query(
+        val eventCursor: Cursor? = contentResolver?.query(
             EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
             eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
         )
@@ -124,7 +124,7 @@ object CalendarUtil {
     }
 
     fun getCalendarEventsInGivenDate(
-        contentResolver: ContentResolver,
+        contentResolver: ContentResolver?,
         givenDate: LocalDate? = null
     ): MutableList<EventEntity> {
         val startEndMillis = getStartEndMillis(givenDate)
@@ -134,7 +134,7 @@ object CalendarUtil {
         if (EVENT_SELECTION_WITH_DATE.contains(calendarIdQuery).not())
             EVENT_SELECTION_WITH_DATE = "$calendarIdQuery AND $EVENT_SELECTION_WITH_DATE"
 
-        val eventCursor: Cursor? = contentResolver.query(
+        val eventCursor: Cursor? = contentResolver?.query(
             EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
             eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
         )
@@ -165,7 +165,7 @@ object CalendarUtil {
         val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
 
         // get the event ID that is the last element in the Uri
-        val eventID = uri?.lastPathSegment
+        //val eventID = uri?.lastPathSegment
     }
 
     private fun eventEntityItem(eventCursor: Cursor) = EventEntity(

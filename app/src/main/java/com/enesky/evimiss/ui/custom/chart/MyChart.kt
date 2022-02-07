@@ -93,7 +93,7 @@ fun Main(modifier: Modifier) {
 
 @Composable
 fun drawArc(drawScope: DrawScope, newExpense: Float, expenseType: ExpenseType) {
-    val income = 36f
+    val income = 36
     with(drawScope) {
         drawArc(
             color = expenseType.color,

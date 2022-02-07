@@ -36,15 +36,12 @@ import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.custom.chart.MyChart
 import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.enesky.evimiss.ui.theme.secondary
-import com.enesky.evimiss.utils.convert2TimelineDate
-import com.enesky.evimiss.utils.getToday
-import com.enesky.evimiss.utils.restart
-import com.enesky.evimiss.utils.signOut
+import com.enesky.evimiss.utils.*
 
 @Composable
 fun ExpenseScreen() {
 
-    val activity = LocalContext.current as MainActivity
+    val activity = LocalContext.current.activity
 
     var lazyColumnHeight = 0f
     val animatedProgress = remember { Animatable(0f) }
@@ -90,7 +87,7 @@ fun ExpenseScreen() {
                 .clickable {
                     //Todo: navigate to settings screen
                     signOut()
-                    activity.restart()
+                    activity?.restart()
                 },
             imageVector = Icons.Rounded.Settings,
             contentDescription = "Settings",

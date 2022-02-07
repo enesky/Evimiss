@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
-import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
 import com.enesky.evimiss.utils.*
@@ -47,8 +46,8 @@ fun MyCalendar() {
 
 @Composable
 fun Main() {
-    val activity = LocalContext.current as MainActivity
-    val viewModel = MyCalendarVM(activity.contentResolver)
+    val activity = LocalContext.current.activity
+    val viewModel = MyCalendarVM(activity?.contentResolver)
     val viewState = viewModel.myCalendarViewState().collectAsState()
     val listState = rememberLazyListState()
 
@@ -66,7 +65,7 @@ fun Main() {
             CalWeek(viewModel, viewState)
         }
         item {
-            DateDetails(viewModel, viewState)
+            DateDetails(viewState)
         }
         items(items = viewState.value.eventList) { item ->
             EventItem(eventEntity = item)
@@ -275,7 +274,7 @@ fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
 }
 
 @Composable
-fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
+fun DateDetails(viewState: State<MyCalendarViewState>) {
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     Row(
         modifier = Modifier

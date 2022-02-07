@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 
 class MyCalendarVM(
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver?
 ): ViewModel() {
 
     private val initialViewState = MyCalendarViewState(eventList = getEventList(getTodaysMyDate().date))

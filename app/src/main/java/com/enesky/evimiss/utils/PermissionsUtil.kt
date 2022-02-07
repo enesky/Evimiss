@@ -23,21 +23,21 @@ object PermissionsUtil {
 
     @Composable
     fun RequestCalendarPermissions(onPermissionsGranted: @Composable () -> Unit) {
-        val activity = LocalContext.current as MainActivity
+        val activity = LocalContext.current.activity
         RequestPermissions(
             permissions = listOf(readCalendar, writeCalendar),
             onPermissionsGranted = onPermissionsGranted,
-            onPermissionsNotAvailable = { activity.openSettings() }
+            onPermissionsNotAvailable = { activity?.openSettings() }
         )
     }
 
     @Composable
     fun RequestLocationsPermissions(onPermissionsGranted: @Composable () -> Unit) {
-        val activity = LocalContext.current as MainActivity
+        val activity = LocalContext.current.activity
         RequestPermissions(
             permissions = listOf(fineLocation, coarseLocation),
             onPermissionsGranted = onPermissionsGranted,
-            onPermissionsNotAvailable = { activity.openSettings() }
+            onPermissionsNotAvailable = { activity?.openSettings() }
         )
     }
 
