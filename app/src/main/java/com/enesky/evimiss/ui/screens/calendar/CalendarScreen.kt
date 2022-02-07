@@ -14,6 +14,7 @@ import com.enesky.evimiss.ui.custom.calendar.MyCalendar
 import com.enesky.evimiss.ui.screens.main.MainScaffold
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Composable
 fun CalendarScreen() {

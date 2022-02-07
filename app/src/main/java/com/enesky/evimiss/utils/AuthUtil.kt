@@ -78,4 +78,7 @@ fun getUserEmail() = App.mAuth.currentUser?.email
 
 fun isAnonymous() = App.mAuth.currentUser?.isAnonymous
 
-fun signOut() = App.mAuth.signOut()
+fun signOut() {
+    App.mAuth.signOut()
+    SharedPrefUtil.clearAll()
+}

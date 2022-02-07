@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,25 +31,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
+import com.enesky.evimiss.data.EventEntity
+import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
 import com.enesky.evimiss.utils.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import org.threeten.bp.LocalDate
 
 /**
  * Created by Enes Kamil YILMAZ on 04/09/2021
  */
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Composable
 fun MyCalendar() {
     Main()
 }
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Composable
 fun Main() {
-    val viewModel = MyCalendarVM()
+    val activity = LocalContext.current as MainActivity
+    val viewModel = MyCalendarVM(activity.contentResolver)
     val viewState = viewModel.myCalendarViewState().collectAsState()
     val listState = rememberLazyListState()
 
@@ -68,15 +75,15 @@ fun Main() {
         item {
             DateDetails(viewModel, viewState)
         }
-        items(items = getDetails(date = viewState.value.selectedDate.date)) { item ->
-            EventItem(event = item)
+        items(items = viewState.value.eventList) { item ->
+            EventItem(eventEntity = item)
         }
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarViewState>) {
+fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -188,7 +195,7 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarV
 }
 
 @Composable
-fun CalWeek(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarViewState>) {
+fun CalWeek(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     val weekLists = viewState.value.weekLists
     for (weekList in weekLists) {
         Row(
@@ -206,7 +213,7 @@ fun CalDay(
     rowScope: RowScope,
     myDate: MyDate,
     viewModel: MyCalendarVM,
-    viewState: State<MyCalendarVM.MyCalendarViewState>
+    viewState: State<MyCalendarViewState>
 ) {
     Box(
         modifier = with(rowScope) {
@@ -233,7 +240,7 @@ fun CalDay(
         if (viewState.value.selectedDate.date.isEqual(myDate.date))
             SelectDate()
 
-        MarkTheDate(boxScope = this, myDate = myDate)
+        MarkTheDate(boxScope = this, viewState = viewState)
     }
 }
 
@@ -258,8 +265,8 @@ fun SelectDate() {
 }
 
 @Composable
-fun MarkTheDate(boxScope: BoxScope, myDate: MyDate) {
-    if (myDate.hasEvents) {
+fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
+    if (viewState.value.eventList.isEmpty().not())
         Column(
             modifier = with(boxScope) {
                 Modifier
@@ -267,22 +274,16 @@ fun MarkTheDate(boxScope: BoxScope, myDate: MyDate) {
                     .padding(5.dp)
             }
         ) {
-            for (j in myDate.events) {
-                Canvas(
-                    Modifier
-                        .size(6.dp)
-                        .padding(1.dp)
-                ) {
+            for (j in viewState.value.eventList)
+                Canvas(Modifier.size(6.dp).padding(1.dp)) {
                     drawCircle(color = secondary)
                 }
-            }
         }
-    }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalendarViewState>) {
+fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     Row(
         modifier = Modifier
@@ -301,51 +302,13 @@ fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarVM.MyCalenda
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
 }
 
-fun getDetails(date: LocalDate) = listOf(
-    Event(
-        date = date,
-        details = "Pazara gidilecek."
-    ),
-    Event(
-        date = date,
-        details = "İSU abonelik başlatılacak."
-    ),
-    Event(
-        date = date,
-        details = "Motora benzin alınacak."
-    ),
-    Event(
-        date = date,
-        details = "Compose çalışmalarına tam gaz dewamke"
-    ),
-)
-
-@Composable
-fun EventItem(event: Event) {
-    Row(
-        modifier = Modifier.fillMaxWidth().offset(x = 4.dp).padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Canvas(Modifier.size(4.dp).align(Alignment.CenterVertically)) {
-            drawCircle(color = secondary)
-        }
-
-        Text(
-            modifier = Modifier.offset(x = 8.dp),
-            text = event.details.toString(),
-            color = Color.White,
-            style = MaterialTheme.typography.subtitle2
-        )
-    }
-}
-
 fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
     isToday(myDate.date) -> secondaryLight
     myDate.date.isFromThisMonth(givenDate).not() -> Color.White.copy(alpha = 0.3f)
     else -> Color.White
 }
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Preview
 @Composable

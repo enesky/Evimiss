@@ -38,9 +38,7 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            NavigationFromSplash(isUserAvailable)
-        }
+        setContent { NavigationFromSplash(isUserAvailable) }
         registerForGoogleSignIn()
     }
 
@@ -64,10 +62,10 @@ class MainActivity : ComponentActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
-            .requestScopes(Scope("https://www.googleapis.com/auth/calendar"))
-            .requestScopes(Scope("https://www.googleapis.com/auth/calendar.events"))
-            .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
-            .requestScopes(Scope("https://www.googleapis.com/auth/spreadsheets"))
+            //.requestScopes(Scope("https://www.googleapis.com/auth/calendar"))
+            //.requestScopes(Scope("https://www.googleapis.com/auth/calendar.events"))
+            //.requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
+            //.requestScopes(Scope("https://www.googleapis.com/auth/spreadsheets"))
             .build()
 
         credentialListener = listener

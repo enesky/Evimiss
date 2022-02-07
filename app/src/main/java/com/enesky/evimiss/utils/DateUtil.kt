@@ -1,20 +1,19 @@
 package com.enesky.evimiss.utils
 
 import com.enesky.evimiss.ui.custom.calendar.MyDate
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
+import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
 import java.util.*
 import kotlin.Exception as KotlinException
 
 const val DATE_FORMAT = "yyyy-MM-dd"
+const val DATE_TIME_FORMAT = "hh:mm:ss"
 const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
 const val DETAILED_DATE_TIME_FORMAT = "dd MMMM EEEE, yyyy, hh:mm:ss"
 const val TIMELINE_DATE = "MMMM, yyyy"
 const val TEST_DATE = "2021-09-16"
+const val INITIAL_UFC_DATE = "0000000000" //01.01.1970 02:00:00
 
 fun isToday(givenDate: String): Boolean {
     givenDate.convert2FormattedLocalDate().apply {
@@ -106,10 +105,37 @@ fun getTodaysMyDate(): MyDate {
     }
 }
 
-fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean = month.equals(givenDate.month) && year == givenDate.year
+fun getTodaysDateTime(): LocalDateTime {
+    return try {
+        LocalDateTime.now()
+    } catch (e: KotlinException) { //Used cause of ZoneRulesException on Preview
+        TEST_DATE.convert2FormattedLocalDateTime()
+    }
+}
+
+fun getMonthsStartEndMillis(givenDate: LocalDate? = null): List<String> {
+    val date = givenDate ?: getToday()
+    val month: YearMonth = YearMonth.from(date)
+    val start: LocalDateTime = month.atDay(1).atStartOfDay()
+    val end: LocalDateTime = month.atEndOfMonth().atTime(23, 59, 59)
+    return listOf(start.getMillis().toString(), end.getMillis().toString())
+}
+
+fun getStartEndMillis(givenDate: LocalDate? = null): List<String> {
+    val date = givenDate ?: getToday()
+    val start: LocalDateTime = date.atStartOfDay()
+    val end: LocalDateTime = date.atTime(23, 59, 59)
+    return listOf(start.getMillis().toString(), end.getMillis().toString())
+}
+
+fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean =
+    month.equals(givenDate.month) && year == givenDate.year
 
 fun String.convert2FormattedLocalDate(): LocalDate =
     LocalDate.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT))
+
+fun String.convert2FormattedLocalDateTime(): LocalDateTime = //TODO: correct DATE_FORMAT
+    LocalDateTime.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT))
 
 fun String.convert2DetailedLocalDate(): LocalDate =
     LocalDate.parse(this, DateTimeFormatter.ofPattern(DETAILED_DATE_FORMAT))
@@ -123,8 +149,16 @@ fun LocalDate.convert2TimelineDate(): String =
 fun LocalDateTime.convert2DetailedDateTime(): String =
     format(DateTimeFormatter.ofPattern(DETAILED_DATE_TIME_FORMAT))
 
-fun Long.convert2DetailedDateTime(): String =
-    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime().convert2DetailedDateTime()
+fun LocalDateTime.convert2DateTime(): String =
+    format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
 
 fun LocalDateTime.getMillis(): Long =
     atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+fun Long.convert2LocalDateTime(): LocalDateTime =
+    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+fun Long.convert2LocalDate(): LocalDate =
+    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+
+fun Long.convert2DetailedDateTime(): String = convert2LocalDateTime().convert2DetailedDateTime()

@@ -1,5 +1,6 @@
 package com.enesky.evimiss.ui.custom.calendar
 
+import android.content.ContentResolver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.enesky.evimiss.utils.*
@@ -10,16 +11,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 
-class MyCalendarVM: ViewModel() {
+class MyCalendarVM(
+    private val contentResolver: ContentResolver
+): ViewModel() {
 
-    data class MyCalendarViewState(
-        var currentDate: MyDate = getTodaysMyDate(),
-        var title: String = currentDate.month,
-        var weekLists: MutableList<Pair<Int, List<MyDate>>> = getMonthList(date = currentDate.date).getWeeksOfMonth(),
-        var selectedDate: MyDate = currentDate
-    )
+    private val initialViewState = MyCalendarViewState(eventList = getEventList(getTodaysMyDate().date))
 
-    private val _myCalendarViewState = MutableStateFlow(MyCalendarViewState())
+    private val _myCalendarViewState = MutableStateFlow(initialViewState)
     fun myCalendarViewState() = _myCalendarViewState.asStateFlow()
 
     fun isSelectedDateInitial() = _myCalendarViewState.value.selectedDate.date == LocalDate.MIN
@@ -36,14 +34,25 @@ class MyCalendarVM: ViewModel() {
                         selectedDate = selectedDate,
                         currentDate = selectedDate,
                         title = selectedDate.month,
-                        weekLists = getMonthList(selectedDate.date).getWeeksOfMonth()
+                        weekLists = getMonthList(selectedDate.date).getWeeksOfMonth(),
+                        eventList = getEventList(selectedDate.date)
                     )
                 }
             } else {
-                _myCalendarViewState.update { it.copy(selectedDate = selectedDate) }
+                _myCalendarViewState.update {
+                    it.copy(
+                        selectedDate = selectedDate,
+                        eventList = getEventList(selectedDate.date)
+                    )
+                }
             }
         }
     }
+
+    private fun getEventList(givenDate: LocalDate) = CalendarUtil.getCalendarEventsInGivenDate(
+            contentResolver = contentResolver,
+            givenDate = givenDate
+        )
 
     fun onNextMonthClicked() {
         viewModelScope.launch(Dispatchers.IO) {

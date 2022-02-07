@@ -44,7 +44,8 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
 
     PermissionsUtil.RequestCalendarPermissions(
         onPermissionsGranted = {
-            CalendarUtil.getCalendarEvents(activity.contentResolver)
+            CalendarUtil.getCalendars(activity.contentResolver)
+            CalendarUtil.getCalendarEventsInGivenDatesMonth(activity.contentResolver)
         }
     )
 

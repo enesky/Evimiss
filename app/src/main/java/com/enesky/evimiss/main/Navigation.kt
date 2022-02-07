@@ -23,6 +23,7 @@ const val CALENDAR = "calendar"
 const val NOTES = "notes"
 const val EXPENSE = "expense"
 
+@ExperimentalPermissionsApi
 @ExperimentalAnimationApi
 @Composable
 fun BottomNavigation(navController: NavHostController) {

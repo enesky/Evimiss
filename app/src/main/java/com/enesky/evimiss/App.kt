@@ -1,6 +1,8 @@
 package com.enesky.evimiss
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -30,6 +32,10 @@ class App: Application() {
         val mCrashlytics: FirebaseCrashlytics
             get() = firebaseCrashlytics
 
+        private lateinit var sharedPreferences: SharedPreferences
+        val mPrefs: SharedPreferences
+            get() = sharedPreferences
+
     }
 
     override fun onCreate() {
@@ -40,6 +46,7 @@ class App: Application() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         firebaseCrashlytics = FirebaseCrashlytics.getInstance()
         firebaseAuth = FirebaseAuth.getInstance()
+        sharedPreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)
 
         val tempUserId = Build.BRAND + " " + Build.DEVICE
         firebaseAnalytics.setUserId(tempUserId)
