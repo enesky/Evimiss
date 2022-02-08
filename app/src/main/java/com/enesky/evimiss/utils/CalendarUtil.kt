@@ -19,7 +19,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-object CalendarUtil {
+class CalendarUtil {
 
     private val CALENDAR_CONTENT_URI = CalendarContract.Calendars.CONTENT_URI
     private val CALENDAR_PROJECTION = arrayOf(
@@ -29,7 +29,7 @@ object CalendarUtil {
         CalendarContract.Calendars.OWNER_ACCOUNT,
     )
     private val calendarList = mutableListOf<CalendarEntity>()
-    private const val CALENDARS_SORT_ORDER = "${CalendarContract.Calendars._ID} ASC"
+    private val CALENDARS_SORT_ORDER = "${CalendarContract.Calendars._ID} ASC"
 
     private val EVENT_CONTENT_URI = CalendarContract.Events.CONTENT_URI
     private val EVENT_PROJECTION = arrayOf(
@@ -49,7 +49,7 @@ object CalendarUtil {
             " OR ${CalendarContract.Events.DTEND} IS NULL))"
     private var calendarIdQuery = "${CalendarContract.Events.CALENDAR_ID} IN (?"
     private val EVENT_SELECTION_ARGS = mutableListOf<String>()
-    private const val EVENTS_SORT_ORDER = "${CalendarContract.Events.DTSTART} ASC"
+    private val EVENTS_SORT_ORDER = "${CalendarContract.Events.DTSTART} ASC"
 
     fun getCalendars(contentResolver: ContentResolver?) {
         val calendarCursor: Cursor? = contentResolver?.query(

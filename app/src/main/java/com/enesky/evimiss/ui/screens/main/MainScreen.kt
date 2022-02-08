@@ -10,17 +10,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.enesky.evimiss.App
 import com.enesky.evimiss.main.BottomNavigation
 import com.enesky.evimiss.main.CALENDAR
 import com.enesky.evimiss.main.EXPENSE
 import com.enesky.evimiss.main.NOTES
 import com.enesky.evimiss.ui.scaffold.FloatingAddButton
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNav
-import com.enesky.evimiss.ui.screens.expense.ExpenseScreen
+import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.ui.theme.primary
 import com.enesky.evimiss.ui.theme.primaryDark
-import com.enesky.evimiss.utils.CalendarUtil
 import com.enesky.evimiss.utils.PermissionsUtil
 import com.enesky.evimiss.utils.activity
 import com.enesky.evimiss.utils.showToast
@@ -40,8 +40,8 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
 
     PermissionsUtil.RequestCalendarPermissions(
         onPermissionsGranted = {
-            CalendarUtil.getCalendars(activity?.contentResolver)
-            CalendarUtil.getCalendarEventsInGivenDatesMonth(activity?.contentResolver)
+            App.mCalendarUtil?.getCalendars(activity?.contentResolver)
+            App.mCalendarUtil?.getCalendarEventsInGivenDatesMonth(activity?.contentResolver)
         }
     )
 
@@ -57,7 +57,7 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
                 }
             },
             floatingActionButton = {
-                FloatingAddButton() {
+                FloatingAddButton {
                     when (navController?.currentDestination?.route) {
                         NOTES -> {
                             activity?.showToast(NOTES)
@@ -83,6 +83,6 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
 @Composable
 fun MainPreview() {
     MainScaffold(
-        content = { ExpenseScreen() }
+        content = { CalendarScreen() }
     )
 }

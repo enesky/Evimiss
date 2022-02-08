@@ -3,6 +3,7 @@ package com.enesky.evimiss.ui.custom.calendar
 import android.content.ContentResolver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.enesky.evimiss.App
 import com.enesky.evimiss.utils.*
 import com.enesky.evimiss.utils.getTodaysMyDate
 import kotlinx.coroutines.Dispatchers
@@ -49,10 +50,10 @@ class MyCalendarVM(
         }
     }
 
-    private fun getEventList(givenDate: LocalDate) = CalendarUtil.getCalendarEventsInGivenDate(
-            contentResolver = contentResolver,
-            givenDate = givenDate
-        )
+    private fun getEventList(givenDate: LocalDate) = App.mCalendarUtil?.getCalendarEventsInGivenDate(
+        contentResolver = contentResolver,
+        givenDate = givenDate
+    ) ?: mutableListOf()
 
     fun onNextMonthClicked() {
         viewModelScope.launch(Dispatchers.IO) {

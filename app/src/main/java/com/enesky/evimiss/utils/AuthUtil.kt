@@ -11,7 +11,7 @@ fun Activity.createUserWithEmailAndPassword(
     onSuccess: (() -> Unit)? = null,
     onFail: ((message: String) -> Unit)? = null
 ) {
-    App.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+    App.mAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
         if (task.isSuccessful) {
             onSuccess?.invoke()
         } else {
@@ -28,7 +28,7 @@ fun Activity.signInWithEmailAndPassword(
     onSuccess: (() -> Unit)? = null,
     onFail: ((message: String) -> Unit)? = null
 ) {
-    App.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+    App.mAuth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this) { task ->
         if (task.isSuccessful)
             onSuccess?.invoke()
         else
@@ -41,7 +41,7 @@ fun Activity.signInWithCredential(
     onSuccess: (() -> Unit)? = null,
     onFail: ((message: String) -> Unit)? = null
 ) {
-    App.mAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+    App.mAuth?.signInWithCredential(credential)?.addOnCompleteListener(this) { task ->
         if (task.isSuccessful)
             onSuccess?.invoke()
         else
@@ -53,7 +53,7 @@ fun Activity.signInAnonymously(
     onSuccess: (() -> Unit)? = null,
     onFail: ((message: String) -> Unit)? = null
 ) {
-    App.mAuth.signInAnonymously().addOnCompleteListener(this) { task ->
+    App.mAuth?.signInAnonymously()?.addOnCompleteListener(this) { task ->
         if (task.isSuccessful)
             onSuccess?.invoke()
         else
@@ -66,7 +66,7 @@ fun Activity.forgotPassword(
     onSuccess: (() -> Unit)? = null,
     onFail: ((message: String) -> Unit)? = null
 ) {
-    App.mAuth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+    App.mAuth?.sendPasswordResetEmail(email)?.addOnCompleteListener { task ->
         if (task.isSuccessful)
             onSuccess?.invoke()
         else
@@ -74,11 +74,11 @@ fun Activity.forgotPassword(
     }
 }
 
-fun getUserEmail() = App.mAuth.currentUser?.email
+fun getUserEmail() = App.mAuth?.currentUser?.email
 
-fun isAnonymous() = App.mAuth.currentUser?.isAnonymous
+fun isAnonymous() = App.mAuth?.currentUser?.isAnonymous
 
 fun signOut() {
-    App.mAuth.signOut()
+    App.mAuth?.signOut()
     SharedPrefUtil.clearAll()
 }

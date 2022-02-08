@@ -1,5 +1,6 @@
 package com.enesky.evimiss.utils
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -15,7 +16,6 @@ import javax.inject.Singleton
  * Created by Enes Kamil YILMAZ on 19/09/2021
  */
 
-@Singleton
 object PermissionsUtil {
 
     private const val readCalendar: String = android.Manifest.permission.READ_CALENDAR
@@ -25,27 +25,29 @@ object PermissionsUtil {
 
     @Composable
     fun RequestCalendarPermissions(onPermissionsGranted: @Composable () -> Unit) {
-        val activity = LocalContext.current.activity
-        RequestPermissions(
-            permissions = listOf(readCalendar, writeCalendar),
-            onPermissionsGranted = onPermissionsGranted,
-            onPermissionsNotAvailable = { activity?.openSettings() }
-        )
+        LocalContext.current.activity?.apply {
+            RequestPermissions(
+                permissions = listOf(readCalendar, writeCalendar),
+                onPermissionsGranted = onPermissionsGranted,
+                onPermissionsNotAvailable = { openSettings() }
+            )
+        }
     }
 
     @Composable
     fun RequestLocationsPermissions(onPermissionsGranted: @Composable () -> Unit) {
-        val activity = LocalContext.current.activity
-        RequestPermissions(
-            permissions = listOf(fineLocation, coarseLocation),
-            onPermissionsGranted = onPermissionsGranted,
-            onPermissionsNotAvailable = { activity?.openSettings() }
-        )
+        LocalContext.current.activity?.apply {
+            RequestPermissions(
+                permissions = listOf(fineLocation, coarseLocation),
+                onPermissionsGranted = onPermissionsGranted,
+                onPermissionsNotAvailable = { openSettings() }
+            )
+        }
     }
 
     @OptIn(ExperimentalPermissionsApi::class)
     @Composable
-    private fun RequestPermissions(
+    private fun Activity.RequestPermissions(
         permissions: List<String> = listOf(),
         onPermissionsGranted: @Composable () -> Unit,
         onPermissionsNotAvailable: () -> Unit

@@ -19,11 +19,6 @@ import com.enesky.evimiss.ui.theme.secondaryLight
 
 @Composable
 fun BottomNav(navController: NavController? = null) {
-    val screens = listOf(
-        BottomNavItem.Notes,
-        BottomNavItem.Calendar,
-        BottomNavItem.Expense
-    )
     Surface(
         color = primaryDark,
         elevation = 8.dp
@@ -40,7 +35,11 @@ fun BottomNav(navController: NavController? = null) {
             } else
                 null
 
-            screens.forEach { screen ->
+            listOf(
+                BottomNavItem.Notes,
+                BottomNavItem.Calendar,
+                BottomNavItem.Expense
+            ).forEach { screen ->
                 val isSelected = currentRoute == screen.route
                 BottomNavigationItem(
                     icon = {
@@ -51,7 +50,7 @@ fun BottomNav(navController: NavController? = null) {
                     },
                     label = {
                         Text(
-                            text = screen.title,
+                            text = screen.title.toString(),
                             style = MaterialTheme.typography.caption,
                             textAlign = TextAlign.Center
                         )

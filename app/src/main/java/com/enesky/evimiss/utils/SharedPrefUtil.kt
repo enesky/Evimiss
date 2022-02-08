@@ -15,19 +15,19 @@ object SharedPrefUtil {
     private const val MAIN_CALENDAR_LIST = "MAIN_CALENDAR_LIST"
 
     var isFirstTime: Boolean
-        get() = App.mPrefs.getBoolean(IS_FIRST_TIME, true)
-        set(value) = App.mPrefs.edit { putBoolean(IS_FIRST_TIME, value) }
+        get() = App.mPrefs?.getBoolean(IS_FIRST_TIME, true) == true
+        set(value) = App.mPrefs!!.edit { putBoolean(IS_FIRST_TIME, value) }
 
     var mainCalendarEntity: CalendarEntity
-        get() = Gson().fromJson(App.mPrefs.getString(MAIN_CALENDAR_ENTITY, ""), object : TypeToken<CalendarEntity>() {}.type)
-        set(value) = App.mPrefs.edit { putString(MAIN_CALENDAR_ENTITY, Gson().toJson(value)) }
+        get() = Gson().fromJson(App.mPrefs?.getString(MAIN_CALENDAR_ENTITY, ""), object : TypeToken<CalendarEntity>() {}.type)
+        set(value) = App.mPrefs!!.edit { putString(MAIN_CALENDAR_ENTITY, Gson().toJson(value)) }
 
     var mainCalendarList: List<CalendarEntity>
-        get() = Gson().fromJson(App.mPrefs.getString(MAIN_CALENDAR_LIST, ""), object : TypeToken<List<CalendarEntity>>() {}.type)
-        set(value) = App.mPrefs.edit { putString(MAIN_CALENDAR_LIST, Gson().toJson(value)) }
+        get() = Gson().fromJson(App.mPrefs?.getString(MAIN_CALENDAR_LIST, ""), object : TypeToken<List<CalendarEntity>>() {}.type)
+        set(value) = App.mPrefs!!.edit { putString(MAIN_CALENDAR_LIST, Gson().toJson(value)) }
 
     fun clearAll() {
-        App.mPrefs.edit().apply{
+        App.mPrefs?.edit()?.apply{
             clear()
             apply()
         }

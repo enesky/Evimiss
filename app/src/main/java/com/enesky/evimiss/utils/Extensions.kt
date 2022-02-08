@@ -29,7 +29,7 @@ inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modif
 }
 
 
-fun getString(@StringRes id : Int) = App.mInstance.getString(id)
+fun getString(@StringRes id: Int) = App.mInstance?.getString(id)
 
 fun MainActivity.restart() {
     val newIntent = intent

@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        val currentUser = App.mAuth.currentUser
+        val currentUser = App.mAuth?.currentUser
         isUserAvailable = currentUser != null
     }
 
