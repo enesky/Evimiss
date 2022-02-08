@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,6 +27,7 @@ inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modif
         onClick()
     }
 }
+
 
 fun getString(@StringRes id : Int) = App.mInstance.getString(id)
 
@@ -48,4 +50,11 @@ fun Activity.openSettings() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     intent.data = Uri.fromParts("package", packageName, null)
     startActivity(intent)
+}
+
+fun Context.showToast(
+    message: String,
+    duration: Int = Toast.LENGTH_SHORT
+) {
+    Toast.makeText(this, message, duration).show()
 }

@@ -8,14 +8,17 @@ import android.util.Log
 import com.enesky.evimiss.data.CalendarEntity
 import com.enesky.evimiss.data.EventEntity
 import com.enesky.evimiss.ui.theme.secondary
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.*
+import javax.inject.Singleton
 
 /**
  * Created by Enes Kamil YILMAZ on 18/09/2021
  */
 
+@Singleton
 object CalendarUtil {
 
     private val CALENDAR_CONTENT_URI = CalendarContract.Calendars.CONTENT_URI
@@ -88,10 +91,16 @@ object CalendarUtil {
 
     fun getAllCalendarEvents(contentResolver: ContentResolver): MutableList<EventEntity> {
         val eventList: MutableList<EventEntity> = mutableListOf()
-        val eventCursor: Cursor? = contentResolver.query(
+        val eventCursor: Cursor? = try {
+            contentResolver.query(
             EVENT_CONTENT_URI, EVENT_PROJECTION, null,
             null, null
-        )
+            )
+        } catch (e: Exception) {
+            Log.d("CalendarUtil", "getAllCalendarEvents: " + e.localizedMessage.toString())
+            FirebaseCrashlytics.getInstance().recordException(e)
+            null
+        }
         while (eventCursor?.moveToNext() == true) {
             val eventEntity = eventEntityItem(eventCursor)
             if (eventCursor.getString(0) == SharedPrefUtil.mainCalendarEntity.id)
@@ -112,10 +121,16 @@ object CalendarUtil {
         if (EVENT_SELECTION_WITH_DATE.contains(calendarIdQuery).not())
             EVENT_SELECTION_WITH_DATE = "$calendarIdQuery AND $EVENT_SELECTION_WITH_DATE"
 
-        val eventCursor: Cursor? = contentResolver?.query(
-            EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
-            eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
-        )
+        val eventCursor: Cursor? = try {
+            contentResolver?.query(
+                EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
+                eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
+            )
+        } catch (e: Exception) {
+            Log.d("CalendarUtil", "getCalendarEventsInGivenDatesMonth: " + e.localizedMessage.toString())
+            FirebaseCrashlytics.getInstance().recordException(e)
+            null
+        }
 
         val eventList: MutableList<EventEntity> = mutableListOf()
         while (eventCursor?.moveToNext() == true)
@@ -134,10 +149,16 @@ object CalendarUtil {
         if (EVENT_SELECTION_WITH_DATE.contains(calendarIdQuery).not())
             EVENT_SELECTION_WITH_DATE = "$calendarIdQuery AND $EVENT_SELECTION_WITH_DATE"
 
-        val eventCursor: Cursor? = contentResolver?.query(
-            EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
-            eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
-        )
+        val eventCursor: Cursor? = try {
+            contentResolver?.query(
+                EVENT_CONTENT_URI, EVENT_PROJECTION, EVENT_SELECTION_WITH_DATE,
+                eventSelectionArgs.toTypedArray(), EVENTS_SORT_ORDER
+            )
+        } catch (e: Exception) {
+            Log.d("CalendarUtil","getCalendarEventsInGivenDate: " + e.localizedMessage.toString())
+            FirebaseCrashlytics.getInstance().recordException(e)
+            null
+        }
 
         val eventList: MutableList<EventEntity> = mutableListOf()
         while (eventCursor?.moveToNext() == true)

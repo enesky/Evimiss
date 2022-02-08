@@ -9,11 +9,13 @@ import com.enesky.evimiss.ui.custom.Alert
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import javax.inject.Singleton
 
 /**
  * Created by Enes Kamil YILMAZ on 19/09/2021
  */
 
+@Singleton
 object PermissionsUtil {
 
     private const val readCalendar: String = android.Manifest.permission.READ_CALENDAR

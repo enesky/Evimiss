@@ -5,7 +5,9 @@ import com.enesky.evimiss.App
 import com.enesky.evimiss.data.CalendarEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import javax.inject.Singleton
 
+@Singleton
 object SharedPrefUtil {
 
     private const val IS_FIRST_TIME = "IS_FIRST_TIME"
