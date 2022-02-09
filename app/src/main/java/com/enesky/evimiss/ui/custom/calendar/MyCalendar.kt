@@ -51,31 +51,32 @@ fun Main() {
     val viewState = viewModel.myCalendarViewState().collectAsState()
     val listState = rememberLazyListState()
 
-    LazyColumn(
-        state = listState,
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        item {
-            CalHeader(viewModel, viewState)
-        }
-        item {
-            CalWeek(viewModel, viewState)
-        }
-        item {
-            DateDetails(viewModel, viewState)
-        }
-        items(items = viewState.value.eventList) { item ->
-            EventItem(eventEntity = item)
+    Column {
+        CalHeader(viewModel, viewState)
+        CalWeek(viewModel, viewState)
+        DateDetails(viewModel, viewState)
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(4.dp)
+        ) {
+            items(items = viewState.value.eventList) { item ->
+                EventItem(eventEntity = item)
+            }
         }
     }
+
 }
 
 @Composable
 fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 4.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -238,23 +239,25 @@ fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
 
 @Composable
 fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
-    Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth().wrapContentHeight()
-            .padding(start = 16.dp, end= 16.dp, top = 8.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            modifier = Modifier.fillMaxHeight(),
-            text = viewState.value.selectedDate.date.convert2DetailedDate(),
-            color = Color.White,
-            style = MaterialTheme.typography.body1
-        )
-        TodayButton(viewModel = viewModel)
+    Column {
+        Divider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = viewState.value.selectedDate.date.convert2DetailedDate(),
+                color = Color.White,
+                style = MaterialTheme.typography.body1
+            )
+            TodayButton(viewModel = viewModel)
+        }
+        Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     }
-    Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -266,7 +269,9 @@ fun TodayButton(viewModel: MyCalendarVM) {
             modifier = Modifier.clickableWithoutRipple { viewModel.onBackToTodayClicked() }
         ) {
             Icon(
-                modifier = Modifier.size(20.dp).padding(end = 4.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 4.dp),
                 painter = painterResource(id = R.drawable.ic_today),
                 contentDescription = "today",
                 tint = secondaryLight
