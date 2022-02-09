@@ -18,9 +18,7 @@ import com.enesky.evimiss.main.NOTES
 import com.enesky.evimiss.ui.scaffold.FloatingAddButton
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNav
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
-import com.enesky.evimiss.ui.theme.EvimissTheme
-import com.enesky.evimiss.ui.theme.primary
-import com.enesky.evimiss.ui.theme.primaryDark
+import com.enesky.evimiss.ui.theme.*
 import com.enesky.evimiss.utils.PermissionsUtil
 import com.enesky.evimiss.utils.activity
 import com.enesky.evimiss.utils.showToast
@@ -51,7 +49,7 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
             bottomBar = {
                 BottomAppBar(
                     cutoutShape = CircleShape,
-                    backgroundColor = primaryDark
+                    backgroundColor = transparent
                 ) {
                     BottomNav(navController)
                 }

@@ -1,10 +1,12 @@
 package com.enesky.evimiss.ui.scaffold.bottomNav
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,8 +22,8 @@ import com.enesky.evimiss.ui.theme.secondaryLight
 @Composable
 fun BottomNav(navController: NavController? = null) {
     Surface(
-        color = primaryDark,
-        elevation = 8.dp
+        modifier = Modifier.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+        color = primaryDark
     ) {
         BottomNavigation(
             modifier = Modifier.padding(end = 72.dp),
@@ -52,13 +54,12 @@ fun BottomNav(navController: NavController? = null) {
                         Text(
                             text = screen.title.toString(),
                             style = MaterialTheme.typography.overline,
-                            textAlign = TextAlign.Center,
-                            softWrap = false
+                            textAlign = TextAlign.Center
                         )
                     },
                     selectedContentColor = secondaryLight,
                     unselectedContentColor = secondary,
-                    alwaysShowLabel = true,
+                    alwaysShowLabel = false,
                     selected = isSelected,
                     onClick = {
                         navController?.navigate(screen.route) {

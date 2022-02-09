@@ -9,8 +9,10 @@ val secondary = Color(0xFFF87020)
 val secondaryDark = Color(0xFFBE4000)
 val secondaryLight = Color(0xFFFFA151)
 val onError = Color(0xFFFF6859)
+
 val white = Color(0xFFFFFFFF)
 val black = Color(0xFF000000)
+val transparent = Color(0x0000ffff)
 
 val rallyGreen = Color(0xFF1EB980)
 val rallyGreenLight = Color(0xFF008577)
