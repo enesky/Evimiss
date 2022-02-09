@@ -9,11 +9,13 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dagger.hilt.android.HiltAndroidApp
 
 /**
  * Created by Enes Kamil YILMAZ on 05/09/2021
  */
 
+@HiltAndroidApp
 class App: Application() {
 
     companion object {
