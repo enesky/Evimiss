@@ -51,13 +51,14 @@ fun BottomNav(navController: NavController? = null) {
                     label = {
                         Text(
                             text = screen.title.toString(),
-                            style = MaterialTheme.typography.caption,
-                            textAlign = TextAlign.Center
+                            style = MaterialTheme.typography.overline,
+                            textAlign = TextAlign.Center,
+                            softWrap = false
                         )
                     },
                     selectedContentColor = secondaryLight,
                     unselectedContentColor = secondary,
-                    alwaysShowLabel = false,
+                    alwaysShowLabel = true,
                     selected = isSelected,
                     onClick = {
                         navController?.navigate(screen.route) {

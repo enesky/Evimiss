@@ -63,7 +63,7 @@ fun Main(modifier: Modifier) {
                 modifier = Modifier.align(Alignment.Center),
                 text = "1450,55 TL",
                 color = Color.White,
-                style = MaterialTheme.typography.subtitle2
+                style = MaterialTheme.typography.body1
             )
         }
         //Categories

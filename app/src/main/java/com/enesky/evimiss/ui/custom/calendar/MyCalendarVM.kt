@@ -24,7 +24,7 @@ class MyCalendarVM(
     fun isSelectedDateInitial() = _myCalendarViewState.value.selectedDate.date == LocalDate.MIN
 
     fun isBack2TodayAvailable(): Boolean =
-        myCalendarViewState().value.currentDate.date.isFromThisMonth().not()
+        myCalendarViewState().value.currentDate.date.isDatesEqueal().not()
 
     fun onDateSelected(selectedDate: MyDate) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -43,6 +43,7 @@ class MyCalendarVM(
                 _myCalendarViewState.update {
                     it.copy(
                         selectedDate = selectedDate,
+                        currentDate = selectedDate,
                         eventList = getEventList(selectedDate.date)
                     )
                 }

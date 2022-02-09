@@ -65,7 +65,7 @@ fun Main() {
             CalWeek(viewModel, viewState)
         }
         item {
-            DateDetails(viewState)
+            DateDetails(viewModel, viewState)
         }
         items(items = viewState.value.eventList) { item ->
             EventItem(eventEntity = item)
@@ -73,7 +73,6 @@ fun Main() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Column {
@@ -85,7 +84,6 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
             Image(
                 modifier = Modifier
                     .weight(3F)
-                    .padding(end = 32.dp)
                     .size(32.dp)
                     .clickableWithoutRipple {
                         viewModel.onPreviousMonthClicked()
@@ -115,54 +113,16 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
                     )
                 )
             }
-            Box(
-                modifier = Modifier.weight(3f),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Image(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxSize()
-                        .padding(start = 32.dp)
-                        .size(32.dp)
-                        .clickableWithoutRipple {
-                            viewModel.onNextMonthClicked()
-                        },
-                    painter = painterResource(id = R.drawable.ic_arrow_right),
-                    contentDescription = "swipeRight"
-                )
-                Row(
-                    modifier = Modifier
-                        .offset(x = (-8).dp, y = 0.dp)
-                        .clickableWithoutRipple {
-                            viewModel.onBackToTodayClicked()
-                        }
-                ) { // Had to use this cause of kotlin import error. To see visit: https://stackoverflow.com/questions/67975569/why-cant-i-use-animatedvisibility-in-a-boxscope
-                    AnimatedVisibility(visible = viewModel.isBack2TodayAvailable()) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                modifier = Modifier.size(20.dp),
-                                painter = painterResource(id = R.drawable.ic_today),
-                                contentDescription = "today",
-                                tint = secondaryLight
-                            )
-                            Text(
-                                text = stringResource(R.string.label_today),
-                                textAlign = TextAlign.Center,
-                                color = secondaryLight,
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 12.sp,
-                                    letterSpacing = 0.5.sp
-                                )
-                            )
-                        }
-                    }
-                }
-            }
+            Image(
+                modifier = Modifier
+                    .weight(3F)
+                    .size(32.dp)
+                    .clickableWithoutRipple {
+                        viewModel.onNextMonthClicked()
+                    },
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = "swipeRight"
+               )
         }
         Spacer(modifier = Modifier.size(4.dp))
         Row(
@@ -267,20 +227,23 @@ fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
             }
         ) {
             for (j in viewState.value.eventList)
-                Canvas(Modifier.size(6.dp).padding(1.dp)) {
+                Canvas(
+                    Modifier
+                        .size(6.dp)
+                        .padding(1.dp)) {
                     drawCircle(color = secondary)
                 }
         }
 }
 
 @Composable
-fun DateDetails(viewState: State<MyCalendarViewState>) {
+fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.Top,
+            .fillMaxWidth().wrapContentHeight()
+            .padding(start = 16.dp, end= 16.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -289,8 +252,34 @@ fun DateDetails(viewState: State<MyCalendarViewState>) {
             color = Color.White,
             style = MaterialTheme.typography.body1
         )
+        TodayButton(viewModel = viewModel)
     }
     Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun TodayButton(viewModel: MyCalendarVM) {
+    AnimatedVisibility(visible = viewModel.isBack2TodayAvailable()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickableWithoutRipple { viewModel.onBackToTodayClicked() }
+        ) {
+            Icon(
+                modifier = Modifier.size(20.dp).padding(end = 4.dp),
+                painter = painterResource(id = R.drawable.ic_today),
+                contentDescription = "today",
+                tint = secondaryLight
+            )
+            Text(
+                text = stringResource(R.string.label_today),
+                textAlign = TextAlign.Center,
+                color = secondaryLight,
+                style = MaterialTheme.typography.body2
+            )
+        }
+    }
+
 }
 
 fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {

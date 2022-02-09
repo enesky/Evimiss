@@ -12,7 +12,7 @@ const val DATE_TIME_FORMAT = "hh:mm:ss"
 const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
 const val DETAILED_DATE_TIME_FORMAT = "dd MMMM EEEE, yyyy, hh:mm:ss"
 const val TIMELINE_DATE = "MMMM, yyyy"
-const val TEST_DATE = "2021-09-16"
+const val TEST_DATE = "2022-02-09"
 const val INITIAL_UFC_DATE = "0000000000" //01.01.1970 02:00:00
 
 fun isToday(givenDate: String): Boolean {
@@ -128,8 +128,11 @@ fun getStartEndMillis(givenDate: LocalDate? = null): List<String> {
     return listOf(start.getMillis().toString(), end.getMillis().toString())
 }
 
+
+fun LocalDate.isDatesEqueal(givenDate: LocalDate = getToday()): Boolean = this == givenDate
+
 fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean =
-    month.equals(givenDate.month) && year == givenDate.year
+    month == givenDate.month && year == givenDate.year
 
 fun String.convert2FormattedLocalDate(): LocalDate =
     LocalDate.parse(this, DateTimeFormatter.ofPattern(DATE_FORMAT))
