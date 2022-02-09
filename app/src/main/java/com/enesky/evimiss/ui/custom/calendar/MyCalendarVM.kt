@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.enesky.evimiss.App
 import com.enesky.evimiss.utils.*
 import com.enesky.evimiss.utils.getTodaysMyDate
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 
+@ActivityRetainedScoped
 class MyCalendarVM(
     private val contentResolver: ContentResolver?
 ): ViewModel() {
