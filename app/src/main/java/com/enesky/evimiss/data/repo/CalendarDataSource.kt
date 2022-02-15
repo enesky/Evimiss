@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract.*
 import android.text.format.DateUtils
+import com.enesky.evimiss.App
 import com.enesky.evimiss.data.model.AttendeeEntity
 import com.enesky.evimiss.data.model.CalendarEntity
 import com.enesky.evimiss.data.model.EventEntity
@@ -148,7 +149,7 @@ class CalendarDataSource @Inject constructor(
         val eventCursor: Cursor? = try {
             contentResolver?.query(builder.build(), instanceProjection, null, null, null)
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            App.mCrashlytics?.recordException(e)
             null
         }
 
@@ -173,7 +174,7 @@ class CalendarDataSource @Inject constructor(
                 null
             )
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            App.mCrashlytics?.recordException(e)
             null
         }
 
@@ -205,7 +206,7 @@ class CalendarDataSource @Inject constructor(
                 updatedArgs.toTypedArray(), eventsSortOrder
             )
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            App.mCrashlytics?.recordException(e)
             null
         }
 

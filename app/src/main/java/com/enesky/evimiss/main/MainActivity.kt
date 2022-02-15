@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
                     credentialListener?.invoke(credential)
                 } catch (e: ApiException) {
-                    FirebaseCrashlytics.getInstance().recordException(e)
+                    App.mCrashlytics?.recordException(e)
                 }
             }
         }
