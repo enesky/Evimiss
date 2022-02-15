@@ -25,6 +25,47 @@
         <entry key="../../../../../layout/compose-model-1632050847642.xml" value="0.32559121621621623" />
         <entry key="../../../../../layout/compose-model-1632051104113.xml" value="0.19256756756756757" />
         <entry key="../../../../../layout/compose-model-1632051129403.xml" value="0.19256756756756757" />
+        <entry key="../../../../../layout/compose-model-1644348980866.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1644405886997.xml" value="0.31851851851851853" />
+        <entry key="../../../../../layout/compose-model-1644406601095.xml" value="0.33234797297297297" />
+        <entry key="../../../../../layout/compose-model-1644407063147.xml" value="0.43703703703703706" />
+        <entry key="../../../../../layout/compose-model-1644407065482.xml" value="0.33234797297297297" />
+        <entry key="../../../../../layout/compose-model-1644407696582.xml" value="0.3391047297297297" />
+        <entry key="../../../../../layout/compose-model-1644407727817.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1644407732805.xml" value="0.43703703703703706" />
+        <entry key="../../../../../layout/compose-model-1644409206439.xml" value="0.31851851851851853" />
+        <entry key="../../../../../layout/compose-model-1644420529181.xml" value="0.33826013513513514" />
+        <entry key="../../../../../layout/compose-model-1644420809473.xml" value="0.6018518518518519" />
+        <entry key="../../../../../layout/compose-model-1644420902422.xml" value="0.6018518518518519" />
+        <entry key="../../../../../layout/compose-model-1644485890622.xml" value="0.6259259259259259" />
+        <entry key="../../../../../layout/compose-model-1644494054065.xml" value="0.6259259259259259" />
+        <entry key="../../../../../layout/compose-model-1644496293505.xml" value="0.6259259259259259" />
+        <entry key="../../../../../layout/compose-model-1644500002605.xml" value="0.32559121621621623" />
+        <entry key="../../../../../layout/compose-model-1644570026153.xml" value="0.5833333333333334" />
+        <entry key="../../../../../layout/compose-model-1644570070187.xml" value="0.5833333333333334" />
+        <entry key="../../../../../layout/compose-model-1644789797271.xml" value="0.3264358108108108" />
+        <entry key="../../../../../layout/compose-model-1644819842315.xml" value="0.4777777777777778" />
+        <entry key="../../../../../layout/compose-model-1644819890303.xml" value="0.4777777777777778" />
+        <entry key="../../../../../layout/compose-model-1644821940928.xml" value="0.31503378378378377" />
+        <entry key="../../../../../layout/compose-model-1644824364298.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1644825888159.xml" value="0.3141891891891892" />
+        <entry key="../../../../../layout/compose-model-1644827295125.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1644827306042.xml" value="0.31503378378378377" />
+        <entry key="app/src/main/res/drawable/ic_account.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_add.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_apps.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_apps_corousel.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_arrow_left.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_arrow_right.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_calendar.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_expense.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_gas_station.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_google_logo.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_notes.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_saved_locations.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_special_days.xml" value="0.179" />
+        <entry key="app/src/main/res/drawable/ic_today.xml" value="0.236" />
       </map>
     </option>
   </component>
