@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
-import com.enesky.evimiss.utils.CalendarUtil
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
@@ -38,10 +37,6 @@ class App: Application() {
         private var sharedPreferences: SharedPreferences? = null
         val mPrefs: SharedPreferences?
             get() = sharedPreferences
-
-        private var calendarUtil: CalendarUtil? = null
-        val mCalendarUtil: CalendarUtil?
-            get() = calendarUtil
     }
 
     override fun onCreate() {
@@ -53,7 +48,6 @@ class App: Application() {
         firebaseCrashlytics = FirebaseCrashlytics.getInstance()
         firebaseAuth = FirebaseAuth.getInstance()
         sharedPreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE)
-        calendarUtil = CalendarUtil()
 
         val tempUserId = Build.BRAND + " " + Build.DEVICE
         firebaseAnalytics?.setUserId(tempUserId)
