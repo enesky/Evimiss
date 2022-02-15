@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.enesky.evimiss.App
 import com.enesky.evimiss.main.BottomNavigation
 import com.enesky.evimiss.main.CALENDAR
 import com.enesky.evimiss.main.EXPENSE
@@ -18,8 +17,9 @@ import com.enesky.evimiss.main.NOTES
 import com.enesky.evimiss.ui.scaffold.FloatingAddButton
 import com.enesky.evimiss.ui.scaffold.bottomNav.BottomNav
 import com.enesky.evimiss.ui.screens.calendar.CalendarScreen
-import com.enesky.evimiss.ui.theme.*
-import com.enesky.evimiss.utils.PermissionsUtil
+import com.enesky.evimiss.ui.theme.EvimissTheme
+import com.enesky.evimiss.ui.theme.primary
+import com.enesky.evimiss.ui.theme.transparent
 import com.enesky.evimiss.utils.activity
 import com.enesky.evimiss.utils.showToast
 
@@ -35,14 +35,6 @@ fun MainScreen() {
 @Composable
 fun MainScaffold(content: @Composable () -> Unit, navController: NavController? = null) {
     val activity = LocalContext.current.activity
-
-    PermissionsUtil.RequestCalendarPermissions(
-        onPermissionsGranted = {
-            App.mCalendarUtil?.getCalendars(activity?.contentResolver)
-            App.mCalendarUtil?.getCalendarEventsInGivenDatesMonth(activity?.contentResolver)
-        }
-    )
-
     EvimissTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),

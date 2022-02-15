@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enesky.evimiss.R
-import com.enesky.evimiss.data.EventEntity
+import com.enesky.evimiss.data.model.EventEntity
 import com.enesky.evimiss.ui.theme.secondary
 
 @Composable

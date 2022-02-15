@@ -14,11 +14,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.enesky.evimiss.App
+import com.enesky.evimiss.data.model.EventEntity
 import com.enesky.evimiss.main.MainActivity
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.threeten.bp.LocalDate
 
 /**
  * Created by Enes Kamil YILMAZ on 06/09/2021
  */
+
+inline fun <T> MutableStateFlow<T>.update(function: (T) -> T) {
+    while (true) {
+        val prevValue = value
+        val nextValue = function(prevValue)
+        if (compareAndSet(prevValue, nextValue)) {
+            return
+        }
+    }
+}
 
 inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modifier = composed {
     clickable(
@@ -27,7 +40,6 @@ inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modif
         onClick()
     }
 }
-
 
 fun getString(@StringRes id: Int) = App.mInstance?.getString(id)
 
@@ -43,10 +55,13 @@ private tailrec fun Context.getMainActivity(): MainActivity? = when (this) {
     else -> null
 }
 
+tailrec fun Context?.activity(): Activity? = this as? Activity
+    ?: (this as? ContextWrapper)?.baseContext?.activity()
+
 val Context.activity: MainActivity?
     get() = getMainActivity()
 
-fun Activity.openSettings() {
+fun Context.openSettings() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     intent.data = Uri.fromParts("package", packageName, null)
     startActivity(intent)
@@ -57,4 +72,14 @@ fun Context.showToast(
     duration: Int = Toast.LENGTH_SHORT
 ) {
     Toast.makeText(this, message, duration).show()
+}
+
+fun MutableList<EventEntity>.givenDatesEventCount(date: LocalDate): Int {
+    var count = 0
+    if (isNullOrEmpty().not())
+        forEach { eventEntity ->
+            if (eventEntity.isEventInGivenDate(date))
+                count++
+        }
+    return count
 }

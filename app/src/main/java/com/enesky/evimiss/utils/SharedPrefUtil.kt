@@ -2,7 +2,7 @@ package com.enesky.evimiss.utils
 
 import androidx.core.content.edit
 import com.enesky.evimiss.App
-import com.enesky.evimiss.data.CalendarEntity
+import com.enesky.evimiss.data.model.CalendarEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Singleton

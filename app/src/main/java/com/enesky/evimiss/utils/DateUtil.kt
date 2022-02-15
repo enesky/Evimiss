@@ -1,6 +1,6 @@
 package com.enesky.evimiss.utils
 
-import com.enesky.evimiss.ui.custom.calendar.MyDate
+import com.enesky.evimiss.data.model.MyDate
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
@@ -43,6 +43,8 @@ fun getMonthList(date: LocalDate = getToday()): MutableList<MyDate> {
         )
     return listOfThisMonthsDate
 }
+
+fun getWeekList(givenDate: LocalDate = getToday()) = getMonthList(givenDate).getWeeksOfMonth()
 
 fun getDayNames(): List<String> { //listOf("Pzt", "Salı", "Çarş", "Perş", "Cuma", "Cmt", "Pzr")
     val today = getToday()
@@ -113,23 +115,22 @@ fun getTodaysDateTime(): LocalDateTime {
     }
 }
 
-fun getMonthsStartEndMillis(givenDate: LocalDate? = null): List<String> {
+fun getMonthsStartEndMillis(givenDate: LocalDate? = null): List<Long> {
     val date = givenDate ?: getToday()
     val month: YearMonth = YearMonth.from(date)
     val start: LocalDateTime = month.atDay(1).atStartOfDay()
     val end: LocalDateTime = month.atEndOfMonth().atTime(23, 59, 59)
-    return listOf(start.getMillis().toString(), end.getMillis().toString())
+    return listOf(start.getMillis(), end.getMillis())
 }
 
-fun getStartEndMillis(givenDate: LocalDate? = null): List<String> {
+fun getStartEndMillis(givenDate: LocalDate? = null): List<Long> {
     val date = givenDate ?: getToday()
     val start: LocalDateTime = date.atStartOfDay()
     val end: LocalDateTime = date.atTime(23, 59, 59)
-    return listOf(start.getMillis().toString(), end.getMillis().toString())
+    return listOf(start.getMillis(), end.getMillis())
 }
 
-
-fun LocalDate.isDatesEqueal(givenDate: LocalDate = getToday()): Boolean = this == givenDate
+fun LocalDate.isDatesEqual(givenDate: LocalDate = getToday()): Boolean = this == givenDate
 
 fun LocalDate.isFromThisMonth(givenDate: LocalDate = getToday()): Boolean =
     month == givenDate.month && year == givenDate.year

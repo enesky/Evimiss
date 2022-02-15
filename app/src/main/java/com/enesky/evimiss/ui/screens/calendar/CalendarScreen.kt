@@ -15,9 +15,7 @@ import com.enesky.evimiss.ui.screens.main.MainScaffold
 @Composable
 fun CalendarScreen() {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
