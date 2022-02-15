@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.enesky.evimiss.R
 
 val Nunito = FontFamily(
-        Font(R.font.nunito_regular),
+        Font(R.font.nunito_regular, weight = FontWeight.Normal),
         Font(R.font.nunito_light, weight = FontWeight.Light),
         Font(R.font.nunito_semibold, weight = FontWeight.SemiBold),
         Font(R.font.nunito_bold, weight = FontWeight.Bold)

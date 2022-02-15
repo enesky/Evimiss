@@ -8,13 +8,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.enesky.evimiss.ui.theme.Nunito
 import com.enesky.evimiss.ui.theme.primaryDark
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
@@ -53,7 +57,12 @@ fun BottomNav(navController: NavController? = null) {
                     label = {
                         Text(
                             text = screen.title.toString(),
-                            style = MaterialTheme.typography.overline,
+                            style = TextStyle(
+                                fontFamily = Nunito,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 11.sp,
+                                letterSpacing = 0.6.sp
+                            ),
                             textAlign = TextAlign.Center
                         )
                     },
