@@ -1,4 +1,4 @@
-package com.enesky.evimiss.ui.custom.calendar
+package com.enesky.evimiss.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -17,24 +17,8 @@ data class MyDate(
     var dayOfWeekValue: Int = date.dayOfWeek.value, // 1
     var dayOfMonth: Int = date.dayOfMonth,// 1
     var month: String = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),// "Eylül",
-    var events: List<Int> = (0..(1..3).random()).toList(),
-    var hasEvents: Boolean = dayOfMonth % (1..10).random() == 0, //false
+    var events: MutableList<EventEntity> = mutableListOf(),
+    var hasEvents: Boolean = events.isNotEmpty(),
     var time: LocalTime = LocalTime.MIN,
     var dateTime: LocalDateTime = LocalDateTime.of(date, time)
-) : Parcelable
-
-@Parcelize
-data class Event(
-    var date: LocalDate,
-    var users: List<User>? = listOf(),
-    var details: String? = "",
-    var attachments: String? = "",
-    var isExpense: Boolean = false,
-    var hasAlarm: Boolean = false
-) : Parcelable
-
-@Parcelize
-data class User (
-    var username: String,
-    var email: String,
 ) : Parcelable
