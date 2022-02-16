@@ -13,9 +13,7 @@ data class EventEntity(
     val title: String? = "",
     val description: String? = "",
     var timeZone: String? = "",
-    val dtStart: String? = null,
     var begin: String? = null,
-    val dtEnd: String? = null,
     var end: String? = null,
     val isAllDay: Boolean? = false,
     val rRule: String? = "",
@@ -30,35 +28,28 @@ data class EventEntity(
 ) : Parcelable {
 
     val startDateTime: LocalDateTime?
-        get() = if (dtStart.isNullOrEmpty() && begin.isNullOrEmpty().not()) begin?.toLong()?.convert2LocalDateTime()
-                else if (dtStart.isNullOrEmpty().not() && begin.isNullOrEmpty()) dtStart?.toLong()?.convert2LocalDateTime()
-                else null
+        get() = begin?.toLong()?.convert2LocalDateTime()
 
     val endDateTime: LocalDateTime?
-        get() = if (dtEnd.isNullOrEmpty() && end.isNullOrEmpty().not()) end?.toLong()?.convert2LocalDateTime()
-                else if (dtEnd.isNullOrEmpty().not() && end.isNullOrEmpty()) dtEnd?.toLong()?.convert2LocalDateTime()
-                else null
+        get() = end?.toLong()?.convert2LocalDateTime()
 
     val startDate: LocalDate?
-        get() = if (dtStart.isNullOrEmpty() && begin.isNullOrEmpty().not()) begin?.toLong()?.convert2LocalDate()
-                else if (dtStart.isNullOrEmpty().not() && begin.isNullOrEmpty()) dtStart?.toLong()?.convert2LocalDate()
-                else null
+        get() = begin?.toLong()?.convert2LocalDate()
 
     val endDate: LocalDate?
-        get() = if (dtEnd.isNullOrEmpty() && end.isNullOrEmpty().not()) end?.toLong()?.convert2LocalDate()
-                else if (dtEnd.isNullOrEmpty().not() && end.isNullOrEmpty()) dtEnd?.toLong()?.convert2LocalDate()
-                else null
+        get() = end?.toLong()?.convert2LocalDate()
+
+    val dateList: MutableList<LocalDate>
+        get() = millisInternalDates(startMillis = begin?.toLong() ?: 0L, endMillis = end?.toLong() ?: 0L)
 
     override fun toString(): String =
                 "ID: $id, CalendarID: $calendarId, Title: $title, Description: $description, " +
-                "StartDateTime: ${startDateTime?.convert2DetailedDateTime()}, " + "dtStart: $dtStart, " + "begin: $begin, " +
-                "EndDateTime: ${endDateTime?.convert2DetailedDateTime()}, " + "dtEnd: $dtEnd, " + "end: $end, " +
+                "StartDateTime: ${startDateTime?.convert2DetailedDateTime()}, " + "begin: $begin, " +
+                "EndDateTime: ${endDateTime?.convert2DetailedDateTime()}, " + "end: $end, " +
                 "IsAllDay: $isAllDay, RRule: $rRule, RDate: $rDate, Duration: $duration" +
                 "Location: $location, displayColor: $displayColor, selfAttendeeStatus: $selfAttendeeStatus, idk: $idk" +
                 "organizer: $organizer, attendees: $attendees"
 
-    fun isEventInGivenDate(givenDate: LocalDate): Boolean =
-        if (startDate == null || endDate == null) false
-        else givenDate.isEqual(startDate) || (givenDate.isAfter(startDate) && givenDate.isBefore(endDate))
+    fun isEventInGivenDate(givenDate: LocalDate): Boolean = dateList.contains(givenDate)
 
 }

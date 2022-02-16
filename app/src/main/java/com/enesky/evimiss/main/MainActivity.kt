@@ -6,9 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewModelScope
 import com.enesky.evimiss.App
 import com.enesky.evimiss.R
 import com.enesky.evimiss.data.repo.CalendarDataSource
+import com.enesky.evimiss.ui.custom.calendar.MyCalendarVM
 import com.enesky.evimiss.utils.PermissionsUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -18,6 +22,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,7 +51,9 @@ class MainActivity : ComponentActivity() {
             NavigationFromSplash(isUserAvailable == true)
             if (isUserAvailable == true)
                 permissionsUtil.RequestCalendarPermissions {
-                    calendarDataSource.init()
+                    LaunchedEffect(Unit) {
+                        calendarDataSource.init()
+                    }
                 }
         }
         registerForGoogleSignIn()

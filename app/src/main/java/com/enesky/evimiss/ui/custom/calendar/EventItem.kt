@@ -81,8 +81,8 @@ fun EventItemsPreview() {
         eventEntity = EventEntity(
             title = stringResource(R.string.label_lorem_ipsum_title),
             description = stringResource(R.string.label_lorem_ipsum_desc),
-            dtStart = null,
-            dtEnd = null
+            begin = null,
+            end = null
         )
     )
 }

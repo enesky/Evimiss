@@ -4,8 +4,10 @@ import com.enesky.evimiss.data.model.MyDate
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 import kotlin.Exception as KotlinException
+
 
 const val DATE_FORMAT = "yyyy-MM-dd"
 const val DATE_TIME_FORMAT = "hh:mm:ss"
@@ -25,14 +27,12 @@ fun isToday(givenDate: String): Boolean {
     }
 }
 
-fun isToday(givenDate: LocalDate): Boolean {
-    givenDate.apply {
-        return try {
+fun LocalDate.isToday(): Boolean {
+    return try {
             isEqual(getToday())
         } catch (e: KotlinException) { //Used cause of ZoneRulesException on Preview
             isEqual(TEST_DATE.convert2FormattedLocalDate())
         }
-    }
 }
 
 fun getMonthList(date: LocalDate = getToday()): MutableList<MyDate> {
@@ -115,19 +115,40 @@ fun getTodaysDateTime(): LocalDateTime {
     }
 }
 
-fun getMonthsStartEndMillis(givenDate: LocalDate? = null): List<Long> {
-    val date = givenDate ?: getToday()
+fun quarterlyMillis(localDate: LocalDate? = null): List<Long> {
+    val date = localDate ?: getToday()
+    val month: YearMonth = YearMonth.from(date)
+    val start: LocalDateTime = month.minusMonths(1).atDay(1).atStartOfDay()
+    val end: LocalDateTime = month.plusMonths(1).atEndOfMonth().atTime(23, 59, 59)
+    return listOf(start.getMillis(), end.getMillis())
+}
+
+fun monthlyMillis(localDate: LocalDate? = null): List<Long> {
+    val date = localDate ?: getToday()
     val month: YearMonth = YearMonth.from(date)
     val start: LocalDateTime = month.atDay(1).atStartOfDay()
     val end: LocalDateTime = month.atEndOfMonth().atTime(23, 59, 59)
     return listOf(start.getMillis(), end.getMillis())
 }
 
-fun getStartEndMillis(givenDate: LocalDate? = null): List<Long> {
-    val date = givenDate ?: getToday()
+fun dailyMillis(localDate: LocalDate? = null): List<Long> {
+    val date = localDate ?: getToday()
     val start: LocalDateTime = date.atStartOfDay()
     val end: LocalDateTime = date.atTime(23, 59, 59)
     return listOf(start.getMillis(), end.getMillis())
+}
+
+fun millisInternalDates(
+    startMillis: Long,
+    endMillis: Long
+): MutableList<LocalDate> {
+    val dateList = mutableListOf<LocalDate>()
+    val startDate = startMillis.convert2LocalDate()
+    val endDate = endMillis.convert2LocalDate()
+    val totalDays: Long = ChronoUnit.DAYS.between(startDate, endDate)
+    for (day in 0..totalDays)
+        dateList.add(startDate.plusDays(day))
+    return dateList
 }
 
 fun LocalDate.isDatesEqual(givenDate: LocalDate = getToday()): Boolean = this == givenDate

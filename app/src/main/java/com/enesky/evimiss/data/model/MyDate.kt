@@ -1,6 +1,7 @@
 package com.enesky.evimiss.data.model
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.*
 import org.threeten.bp.format.TextStyle
@@ -18,7 +19,11 @@ data class MyDate(
     var dayOfMonth: Int = date.dayOfMonth,// 1
     var month: String = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),// "Eylül",
     var events: MutableList<EventEntity> = mutableListOf(),
-    var hasEvents: Boolean = events.isNotEmpty(),
     var time: LocalTime = LocalTime.MIN,
     var dateTime: LocalDateTime = LocalDateTime.of(date, time)
-) : Parcelable
+) : Parcelable {
+
+    val hasEvents: Boolean
+        get() = events.isNotEmpty()
+
+}

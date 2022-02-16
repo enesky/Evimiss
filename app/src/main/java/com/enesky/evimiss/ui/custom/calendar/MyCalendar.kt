@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.enesky.evimiss.R
+import com.enesky.evimiss.data.model.MyDate
 import com.enesky.evimiss.ui.theme.secondary
 import com.enesky.evimiss.ui.theme.secondaryLight
 import com.enesky.evimiss.utils.*
@@ -46,8 +47,7 @@ fun MyCalendar() {
 
 @Composable
 fun Main() {
-    val activity = LocalContext.current.activity
-    val viewModel = MyCalendarVM(activity?.contentResolver)
+    val viewModel: MyCalendarVM = hiltViewModel()
     val viewState = viewModel.myCalendarViewState().collectAsState()
     val listState = rememberLazyListState()
 
@@ -57,17 +57,21 @@ fun Main() {
         DateDetails(viewModel, viewState)
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(4.dp)
         ) {
-            items(items = viewState.value.eventList) { item ->
-                EventItem(eventEntity = item)
+            items(items = viewState.value.eventMap[viewState.value.selectedDate.date] ?: mutableListOf()) { eventEntity ->
+                EventItem(eventEntity)
             }
         }
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp))
     }
-
 }
 
 @Composable
@@ -98,13 +102,13 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = viewState.value.currentDate.date.year.toString(),
+                    text = viewState.value.todaysDate.date.year.toString(),
                     textAlign = TextAlign.Center,
                     color = Color.White.copy(alpha = 0.4f),
                     style = MaterialTheme.typography.subtitle2
                 )
                 Text(
-                    text = viewState.value.title,
+                    text = viewState.value.calendarTitle,
                     textAlign = TextAlign.Center,
                     color = Color.White,
                     style = TextStyle(
@@ -183,17 +187,14 @@ fun CalDay(
             text = myDate.dayOfMonth.toString(),
             color = colorizeDate(
                 myDate = myDate,
-                givenDate = viewState.value.currentDate.date
+                givenDate = viewState.value.todaysDate.date
             ),
             style = MaterialTheme.typography.body1
         )
-
-        if (myDate.date.isEqual(getToday()) && viewModel.isSelectedDateInitial())
+        if ((myDate.date.isToday() && viewState.value.selectedDate.date.isToday()) || viewState.value.selectedDate.date.isEqual(myDate.date))
             SelectDate()
-        if (viewState.value.selectedDate.date.isEqual(myDate.date))
-            SelectDate()
-
-        MarkTheDate(boxScope = this, viewState = viewState)
+        if (myDate.hasEvents)
+            MarkTheDate(boxScope = this, myDate = myDate)
     }
 }
 
@@ -218,29 +219,32 @@ fun SelectDate() {
 }
 
 @Composable
-fun MarkTheDate(boxScope: BoxScope, viewState: State<MyCalendarViewState>) {
-    if (viewState.value.eventList.isEmpty().not())
-        Column(
-            modifier = with(boxScope) {
-                Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(5.dp)
-            }
-        ) {
-            for (j in viewState.value.eventList)
-                Canvas(
-                    Modifier
-                        .size(6.dp)
-                        .padding(1.dp)) {
-                    drawCircle(color = secondary)
-                }
+fun MarkTheDate(boxScope: BoxScope, myDate: MyDate) {
+    Column(
+        modifier = with(boxScope) {
+            Modifier
+                .align(Alignment.TopEnd)
+                .padding(5.dp)
         }
+    ) {
+        for (i in 1..myDate.events.take(3).size)
+            Canvas(
+                Modifier
+                    .size(6.dp)
+                    .padding(1.dp)) {
+                drawCircle(color = secondary)
+            }
+    }
 }
 
 @Composable
 fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
-    Column {
-        Divider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Divider(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -284,11 +288,10 @@ fun TodayButton(viewModel: MyCalendarVM) {
             )
         }
     }
-
 }
 
 fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
-    isToday(myDate.date) -> secondaryLight
+    myDate.date.isToday() -> secondaryLight
     myDate.date.isFromThisMonth(givenDate).not() -> Color.White.copy(alpha = 0.3f)
     else -> Color.White
 }

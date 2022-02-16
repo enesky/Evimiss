@@ -17,16 +17,19 @@ class CalendarRepository @Inject constructor(
 ) {
 
     suspend fun fetchEvents(
-        givenDate: LocalDate? = getToday(),
-        getDailyEvents: Boolean = false
-    ): MutableList<EventEntity> {
+        givenDate: LocalDate? = null,
+        eventsInterval: EventsInterval? = null
+    ): MutableMap<LocalDate, MutableList<EventEntity>> {
         return withContext(Dispatchers.Default) {
-            source.getEvents(givenDate, getDailyEvents)
+            source.getEvents(givenDate, eventsInterval)
         }
     }
 
-    fun getEvents(): MutableList<EventEntity> {
-        return source.getEvents(getToday(), true)
+    fun getEvents(
+        givenDate: LocalDate? = null,
+        eventsInterval: EventsInterval? = null
+    ): MutableMap<LocalDate, MutableList<EventEntity>> {
+        return source.getEvents(givenDate, eventsInterval)
     }
 
 }
