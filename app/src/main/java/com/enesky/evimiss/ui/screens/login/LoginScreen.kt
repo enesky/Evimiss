@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.enesky.evimiss.R
 import com.enesky.evimiss.main.MAIN
+import com.enesky.evimiss.main.MainActivity
 import com.enesky.evimiss.ui.custom.GoogleButton
 import com.enesky.evimiss.ui.theme.EvimissTheme
 import com.enesky.evimiss.utils.*
@@ -38,6 +39,7 @@ import com.enesky.evimiss.utils.*
 fun LoginScreen(navController: NavController? = null) {
 
     val activity = LocalContext.current.activity
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -119,7 +121,7 @@ fun LoginScreen(navController: NavController? = null) {
                                 value = password,
                                 onValueChange = { password = it },
                                 label = {
-                                    Text(//TODO: add password errors
+                                    Text( //Todo: add password errors
                                         text = stringResource(R.string.label_password)
                                     )
                                 },
@@ -148,7 +150,7 @@ fun LoginScreen(navController: NavController? = null) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
                                 onClick = {
-                                    activity?.createUserWithEmailAndPassword(
+                                    activity?.authUtil?.createUserWithEmailAndPassword(
                                         email = email,
                                         password = password,
                                         onSuccess = {
@@ -167,8 +169,8 @@ fun LoginScreen(navController: NavController? = null) {
                             }
                             Spacer(modifier = Modifier.weight(1f))
                             GoogleButton {
-                                activity?.signInWithGoogle { credential ->
-                                    activity.signInWithCredential(
+                                activity?.googleSignInUtil?.signInWithGoogle { credential ->
+                                    activity.authUtil.signInWithCredential(
                                         credential = credential,
                                         onSuccess = {
                                             navController?.navigate(MAIN)
@@ -183,7 +185,7 @@ fun LoginScreen(navController: NavController? = null) {
                             TextButton(
                                 modifier = Modifier.padding(4.dp),
                                 onClick = {
-                                    activity?.signInAnonymously(
+                                    activity?.authUtil?.signInAnonymously(
                                         onSuccess = {
                                             navController?.navigate(MAIN)
                                         },
@@ -199,12 +201,12 @@ fun LoginScreen(navController: NavController? = null) {
                             TextButton(
                                 modifier = Modifier.padding(4.dp),
                                 onClick = {
-                                    if (email.isNullOrEmpty()) {
+                                    if (email.isEmpty()) {
                                         needEmail = true
                                         return@TextButton
                                     }
                                     needEmail = false
-                                    activity?.forgotPassword(
+                                    activity?.authUtil?.forgotPassword(
                                         email = email,
                                         onSuccess = {
                                             navController?.navigate(MAIN)

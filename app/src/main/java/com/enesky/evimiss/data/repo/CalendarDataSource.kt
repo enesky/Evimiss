@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract.*
 import android.text.format.DateUtils
-import android.util.Log
 import com.enesky.evimiss.App
 import com.enesky.evimiss.data.model.AttendeeEntity
 import com.enesky.evimiss.data.model.CalendarEntity
@@ -19,7 +18,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.*
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
 
 /**
  * Created by Enes Kamil YILMAZ on 18/09/2021
@@ -92,7 +90,7 @@ class CalendarDataSource @Inject constructor(
                     cursor.getString(3)
                 ).apply {
                     calendarList.add(this)
-                    if (isMain() && (accountName == getUserEmail() || isAnonymous() == true))
+                    if (isMain() && (accountName == getUserEmail() || isAnonymous()))
                         SharedPrefUtil.mainCalendarEntity = this
                 }
             }
@@ -133,7 +131,7 @@ class CalendarDataSource @Inject constructor(
             null
         }
 
-        while (eventCursor?.moveToNext() == true) {
+        while (eventCursor?.moveToNext().isTrue()) {
             val eventEntity = eventEntity(eventCursor).apply { attendees = getAttendees(id) }
             val dateList = eventEntity.dateList
             for (localDate in dateList)
@@ -160,7 +158,7 @@ class CalendarDataSource @Inject constructor(
         }
 
         val attendeeList: MutableList<AttendeeEntity> = mutableListOf()
-        while (cursor?.moveToNext() == true)
+        while (cursor?.moveToNext().isTrue())
             attendeeList.add(attendeeEntity(cursor))
         cursor?.close()
         return attendeeList
@@ -193,48 +191,37 @@ class CalendarDataSource @Inject constructor(
     /**
      * Converts calendar events to EventEntity model.
      */
-    private fun eventEntity(eventCursor: Cursor) =
+    private fun eventEntity(eventCursor: Cursor?) =
         EventEntity(
-            id = eventCursor.getString(0),
-            calendarId = eventCursor.getString(1),
-            title = eventCursor.getString(2),
-            description = eventCursor.getString(3),
-            timeZone = eventCursor.getString(4),
-            //dtStart = eventCursor.getString(5),
-            //dtEnd = eventCursor.getString(6),
-            begin = eventCursor.getString(5),
-            end = eventCursor.getString(6),
-            isAllDay = eventCursor.getString(7) != "0",
-            rRule = eventCursor.getString(8),
-            rDate = eventCursor.getString(9),
-            duration = eventCursor.getString(10),
-            location = eventCursor.getString(11),
-            displayColor = eventCursor.getString(12),
-            selfAttendeeStatus = eventCursor.getString(13),
-            organizer = eventCursor.getString(14),
-            idk = eventCursor.getString(15) != "0",
+            id = eventCursor?.getString(0),
+            calendarId = eventCursor?.getString(1),
+            title = eventCursor?.getString(2),
+            description = eventCursor?.getString(3),
+            timeZone = eventCursor?.getString(4),
+            //dtStart = eventCursor?.getString(5),
+            //dtEnd = eventCursor?.getString(6),
+            begin = eventCursor?.getString(5),
+            end = eventCursor?.getString(6),
+            isAllDay = eventCursor?.getString(7) != "0",
+            rRule = eventCursor?.getString(8),
+            rDate = eventCursor?.getString(9),
+            duration = eventCursor?.getString(10),
+            location = eventCursor?.getString(11),
+            displayColor = eventCursor?.getString(12),
+            selfAttendeeStatus = eventCursor?.getString(13),
+            organizer = eventCursor?.getString(14),
+            idk = eventCursor?.getString(15) != "0",
         )
 
 
     /**
      * Converts calendar attendees to AttendeeEntity model.
      */
-    private fun attendeeEntity(eventCursor: Cursor) =
+    private fun attendeeEntity(eventCursor: Cursor?) =
         AttendeeEntity(
-            eventID = eventCursor.getString(0),
-            name = eventCursor.getString(1),
-            email = eventCursor.getString(2),
-        )
-
-    private fun eventEntityFromInstance(eventCursor: Cursor) =
-        EventEntity(
-            id = eventCursor.getString(0),         //Instances.EVENT_ID,
-            title = eventCursor.getString(1),      //Instances.TITLE,
-            begin = eventCursor.getString(2),    //Instances.DTSTART
-            end = eventCursor.getString(3),      //Instances.DTEND
-            calendarId = eventCursor.getString(4), //Instances.BEGIN
-            location = eventCursor.getString(5),   //Instances.END
-            description = eventCursor.getString(6) //Instances.DESCRIPTION
+            eventID = eventCursor?.getString(0),
+            name = eventCursor?.getString(1),
+            email = eventCursor?.getString(2),
         )
 
     /*

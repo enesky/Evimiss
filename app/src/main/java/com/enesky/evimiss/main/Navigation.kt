@@ -30,10 +30,10 @@ fun BottomNavigation(navController: NavHostController) {
 }
 
 @Composable
-fun NavigationFromSplash(isUserAvailable: Boolean? = false) {
+fun NavigationFromSplash() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = SPLASH) {
-        composable(SPLASH) { SplashScreen(navController, isUserAvailable) }
+        composable(SPLASH) { SplashScreen(navController) }
         composable(LOGIN) { LoginScreen(navController) }
         composable(MAIN) { MainScreen() }
     }

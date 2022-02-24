@@ -15,7 +15,7 @@ object SharedPrefUtil {
     private const val MAIN_CALENDAR_LIST = "MAIN_CALENDAR_LIST"
 
     var isFirstTime: Boolean
-        get() = App.mPrefs?.getBoolean(IS_FIRST_TIME, true) == true
+        get() = App.mPrefs?.getBoolean(IS_FIRST_TIME, true).isTrue()
         set(value) = App.mPrefs!!.edit { putBoolean(IS_FIRST_TIME, value) }
 
     var mainCalendarEntity: CalendarEntity

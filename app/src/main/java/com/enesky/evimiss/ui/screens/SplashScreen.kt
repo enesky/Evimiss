@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.enesky.evimiss.App
 import com.enesky.evimiss.R
 import com.enesky.evimiss.main.LOGIN
 import com.enesky.evimiss.main.MAIN
@@ -24,8 +25,10 @@ import com.enesky.evimiss.ui.theme.primaryDark
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController? = null, isUserAvailable: Boolean? = false) {
+fun SplashScreen(navController: NavController? = null) {
+
     val scale = remember { Animatable(0f) }
+
     LaunchedEffect(key1 = true) {
         scale.animateTo(
             targetValue = 2f,
@@ -36,9 +39,8 @@ fun SplashScreen(navController: NavController? = null, isUserAvailable: Boolean?
                 }
             )
         )
-        delay(1000L)
-        val navigateTo = if (isUserAvailable == true) MAIN else LOGIN
-        navController?.navigate(navigateTo)
+        delay(750L)
+        navController?.navigate(if (App.mAuth?.currentUser != null) MAIN else LOGIN)
         navController?.enableOnBackPressed(false)
     }
 
@@ -58,5 +60,5 @@ fun SplashScreen(navController: NavController? = null, isUserAvailable: Boolean?
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen(rememberNavController())
+    SplashScreen()
 }

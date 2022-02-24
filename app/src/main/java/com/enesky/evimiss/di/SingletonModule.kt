@@ -16,21 +16,19 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ProvidersModule {
+object SingletonModule {
 
     @Provides
     fun provideCalendarDataSource(
         @ApplicationContext context: Context
-    ): CalendarDataSource = CalendarDataSource(context.contentResolver)
+    ) = CalendarDataSource(context.contentResolver)
 
     @Provides
     fun provideCalendarRepository(
         calendarDataSource: CalendarDataSource
-    ): CalendarRepository = CalendarRepository(calendarDataSource)
+    ) = CalendarRepository(calendarDataSource)
 
     @Provides
-    fun providePermissionsUtil(
-        @ApplicationContext context: Context
-    ): PermissionsUtil = PermissionsUtil(context)
+    fun providePermissionsUtil(@ApplicationContext context: Context) = PermissionsUtil(context)
 
 }

@@ -1,5 +1,6 @@
 package com.enesky.evimiss.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -14,10 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.enesky.evimiss.App
-import com.enesky.evimiss.data.model.EventEntity
 import com.enesky.evimiss.main.MainActivity
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.threeten.bp.LocalDate
 
 /**
  * Created by Enes Kamil YILMAZ on 06/09/2021
@@ -33,6 +32,7 @@ inline fun <T> MutableStateFlow<T>.update(function: (T) -> T) {
     }
 }
 
+@SuppressLint("UnnecessaryComposedModifier")
 inline fun Modifier.clickableWithoutRipple(crossinline onClick: ()->Unit): Modifier = composed {
     clickable(
         indication = null,
@@ -74,12 +74,4 @@ fun Context.showToast(
     Toast.makeText(this, message, duration).show()
 }
 
-fun MutableList<EventEntity>.givenDatesEventCount(date: LocalDate): Int {
-    var count = 0
-    if (isNullOrEmpty().not())
-        forEach { eventEntity ->
-            if (eventEntity.isEventInGivenDate(date))
-                count++
-        }
-    return count
-}
+fun Boolean?.isTrue(): Boolean = this == true

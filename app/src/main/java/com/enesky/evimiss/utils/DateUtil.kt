@@ -8,7 +8,6 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 import kotlin.Exception as KotlinException
 
-
 const val DATE_FORMAT = "yyyy-MM-dd"
 const val DATE_TIME_FORMAT = "hh:mm:ss"
 const val DETAILED_DATE_FORMAT = "dd MMMM EEEE, yyyy"
