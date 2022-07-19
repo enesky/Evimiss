@@ -55,14 +55,9 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-        useIR = true
-    }
+    kotlinOptions.jvmTarget = "1.8"
 
-    buildFeatures {
-        compose true
-    }
+    buildFeatures.compose true
 
 }
 
