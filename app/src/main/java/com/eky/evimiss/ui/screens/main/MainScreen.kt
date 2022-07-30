@@ -14,6 +14,7 @@ import com.eky.evimiss.main.BottomNavigation
 import com.eky.evimiss.main.CALENDAR
 import com.eky.evimiss.main.EXPENSE
 import com.eky.evimiss.main.NOTES
+import com.eky.evimiss.ui.custom.calendar.viewmodel.PreviewCalendarVM
 import com.eky.evimiss.ui.scaffold.FloatingAddButton
 import com.eky.evimiss.ui.scaffold.bottomNav.BottomNav
 import com.eky.evimiss.ui.screens.calendar.CalendarScreen
@@ -73,6 +74,10 @@ fun MainScaffold(content: @Composable () -> Unit, navController: NavController? 
 @Composable
 fun MainPreview() {
     MainScaffold(
-        content = { CalendarScreen() }
+        content = {
+            CalendarScreen(
+                calendarVM = PreviewCalendarVM()
+            )
+        }
     )
 }

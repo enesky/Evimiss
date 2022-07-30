@@ -1,10 +1,12 @@
 package com.eky.evimiss.main
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.eky.evimiss.ui.custom.calendar.viewmodel.MyCalendarVM
 import com.eky.evimiss.ui.scaffold.bottomNav.BottomNavItem
 import com.eky.evimiss.ui.screens.SplashScreen
 import com.eky.evimiss.ui.screens.calendar.CalendarScreen
@@ -24,7 +26,10 @@ const val EXPENSE = "expense"
 fun BottomNavigation(navController: NavHostController) {
     NavHost(navController, startDestination = BottomNavItem.Calendar.route) {
         composable(BottomNavItem.Notes.route) { NotesScreen() }
-        composable(BottomNavItem.Calendar.route) { CalendarScreen() }
+        composable(BottomNavItem.Calendar.route) {
+            val calendarVM = hiltViewModel<MyCalendarVM>()
+            CalendarScreen(calendarVM)
+        }
         composable(BottomNavItem.Expense.route) { ExpenseScreen() }
     }
 }

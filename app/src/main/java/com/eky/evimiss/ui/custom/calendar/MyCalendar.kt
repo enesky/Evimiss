@@ -27,9 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.eky.evimiss.R
+import com.eky.evimiss.ui.custom.calendar.viewmodel.BaseCalendarVM
 import com.eky.evimiss.data.model.MyDate
+import com.eky.evimiss.ui.custom.calendar.viewmodel.PreviewCalendarVM
 import com.eky.evimiss.ui.theme.secondary
 import com.eky.evimiss.ui.theme.secondaryLight
 import com.eky.evimiss.utils.*
@@ -40,36 +41,36 @@ import org.threeten.bp.LocalDate
  */
 
 @Composable
-fun MyCalendar() {
-    val viewModel: MyCalendarVM = hiltViewModel()
-    val viewState = viewModel.myCalendarViewState().collectAsState()
-    val listState = rememberLazyListState()
-
+fun MyCalendar(viewModel: BaseCalendarVM) {
+    val viewState = viewModel.getViewState().collectAsState()
     Column {
-        CalHeader(viewModel, viewState)
-        CalWeek(viewModel, viewState)
-        DateDetails(viewModel, viewState)
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 80.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            items(items = viewState.value.eventMap[viewState.value.selectedDate.date] ?: mutableListOf()) { eventEntity ->
-                EventItem(eventEntity)
-            }
-        }
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp))
+        CalHeader(
+            viewState = viewState,
+            onPreviousMonthClicked = viewModel::onPreviousMonthClicked,
+            onNextMonthClicked = viewModel::onNextMonthClicked
+        )
+        CalWeek(
+            viewState = viewState,
+            onDateSelected = viewModel::onDateSelected
+        )
+        DateDetails(
+            viewState = viewState,
+            isBack2TodayAvailable = viewModel::isBack2TodayAvailable,
+            onBackToTodayClicked = viewModel::onBackToTodayClicked
+        )
+        CalEvents(viewState = viewState)
+        Spacer(
+            modifier = Modifier.fillMaxWidth().height(80.dp)
+        )
     }
 }
 
 @Composable
-fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
+fun CalHeader(
+    viewState: State<MyCalendarViewState>,
+    onPreviousMonthClicked: () -> Unit,
+    onNextMonthClicked: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +86,7 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
                     .weight(3F)
                     .size(32.dp)
                     .clickableWithoutRipple {
-                        viewModel.onPreviousMonthClicked()
+                        onPreviousMonthClicked()
                     },
                 painter = painterResource(id = R.drawable.ic_arrow_left),
                 contentDescription = "swipeLeft"
@@ -117,7 +118,7 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
                     .weight(3F)
                     .size(32.dp)
                     .clickableWithoutRipple {
-                        viewModel.onNextMonthClicked()
+                        onNextMonthClicked()
                     },
                 painter = painterResource(id = R.drawable.ic_arrow_right),
                 contentDescription = "swipeRight"
@@ -146,7 +147,10 @@ fun CalHeader(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
 }
 
 @Composable
-fun CalWeek(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
+fun CalWeek(
+    viewState: State<MyCalendarViewState>,
+    onDateSelected: (selectedDate: MyDate) -> Unit
+) {
     val weekLists = viewState.value.weekLists
     for (weekList in weekLists) {
         Row(
@@ -154,7 +158,7 @@ fun CalWeek(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             for (myDate in weekList.second)
-                CalDay(this, myDate, viewModel, viewState)
+                CalDay(this, myDate, viewState, onDateSelected)
         }
     }
 }
@@ -163,15 +167,15 @@ fun CalWeek(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
 fun CalDay(
     rowScope: RowScope,
     myDate: MyDate,
-    viewModel: MyCalendarVM,
-    viewState: State<MyCalendarViewState>
+    viewState: State<MyCalendarViewState>,
+    onDateSelected: (selectedDate: MyDate) -> Unit
 ) {
     Box(
         modifier = with(rowScope) {
             Modifier
                 .weight(1f)
                 .clickableWithoutRipple {
-                    viewModel.onDateSelected(selectedDate = myDate)
+                   onDateSelected(myDate)
                 }
         },
         contentAlignment = Alignment.Center
@@ -189,6 +193,86 @@ fun CalDay(
             SelectDate()
         if (myDate.hasEvents)
             MarkTheDate(boxScope = this, myDate = myDate)
+    }
+}
+
+@Composable
+fun DateDetails(
+    viewState: State<MyCalendarViewState>,
+    isBack2TodayAvailable: () -> Boolean,
+    onBackToTodayClicked: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Divider(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = viewState.value.selectedDate.date.convert2DetailedDate(),
+                color = Color.White,
+                style = MaterialTheme.typography.body1
+            )
+            TodayButton(isBack2TodayAvailable, onBackToTodayClicked)
+        }
+        Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
+    }
+}
+
+@Composable
+fun CalEvents(viewState: State<MyCalendarViewState>) {
+    val listState = rememberLazyListState()
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        val selectedDate = viewState.value.selectedDate.date
+        items(
+            items = viewState.value.eventMap[selectedDate] ?: mutableListOf()
+        ) { eventEntity ->
+            EventItem(eventEntity)
+        }
+    }
+}
+
+@Composable
+fun TodayButton(
+    isBack2TodayAvailable: () -> Boolean,
+    onBackToTodayClicked: () -> Unit
+) {
+    AnimatedVisibility(visible = isBack2TodayAvailable()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickableWithoutRipple { onBackToTodayClicked() }
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 4.dp),
+                painter = painterResource(id = R.drawable.ic_today),
+                contentDescription = "today",
+                tint = secondaryLight
+            )
+            Text(
+                text = stringResource(R.string.label_today),
+                textAlign = TextAlign.Center,
+                color = secondaryLight,
+                style = MaterialTheme.typography.body2
+            )
+        }
     }
 }
 
@@ -231,58 +315,6 @@ fun MarkTheDate(boxScope: BoxScope, myDate: MyDate) {
     }
 }
 
-@Composable
-fun DateDetails(viewModel: MyCalendarVM, viewState: State<MyCalendarViewState>) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = viewState.value.selectedDate.date.convert2DetailedDate(),
-                color = Color.White,
-                style = MaterialTheme.typography.body1
-            )
-            TodayButton(viewModel = viewModel)
-        }
-        Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
-    }
-}
-
-@Composable
-fun TodayButton(viewModel: MyCalendarVM) {
-    AnimatedVisibility(visible = viewModel.isBack2TodayAvailable()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickableWithoutRipple { viewModel.onBackToTodayClicked() }
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 4.dp),
-                painter = painterResource(id = R.drawable.ic_today),
-                contentDescription = "today",
-                tint = secondaryLight
-            )
-            Text(
-                text = stringResource(R.string.label_today),
-                textAlign = TextAlign.Center,
-                color = secondaryLight,
-                style = MaterialTheme.typography.body2
-            )
-        }
-    }
-}
-
 private fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
     myDate.date.isToday() -> secondaryLight
     myDate.date.isFromThisMonth(givenDate).not() -> Color.White.copy(alpha = 0.3f)
@@ -292,5 +324,5 @@ private fun colorizeDate(myDate: MyDate, givenDate: LocalDate): Color = when {
 @Preview
 @Composable
 fun PreviewMyCalendar() {
-    MyCalendar()
+    MyCalendar(viewModel = PreviewCalendarVM())
 }

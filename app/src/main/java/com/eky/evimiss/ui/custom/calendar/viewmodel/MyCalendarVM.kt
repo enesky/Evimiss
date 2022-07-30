@@ -1,10 +1,11 @@
-package com.eky.evimiss.ui.custom.calendar
+package com.eky.evimiss.ui.custom.calendar.viewmodel
 
 import androidx.lifecycle.*
 import com.eky.evimiss.data.model.EventEntity
 import com.eky.evimiss.data.model.MyDate
 import com.eky.evimiss.data.repo.CalendarRepository
 import com.eky.evimiss.data.repo.EventsInterval
+import com.eky.evimiss.ui.custom.calendar.MyCalendarViewState
 import com.eky.evimiss.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,18 +17,16 @@ import javax.inject.Inject
 @HiltViewModel
 class MyCalendarVM @Inject constructor(
     private val calendarRepository: CalendarRepository
-) : ViewModel() {
+) : BaseCalendarVM() {
 
     private val _myCalendarViewState = MutableStateFlow(MyCalendarViewState().apply {
-        updateEvents(
-            calendarRepository.getEvents(eventsInterval = EventsInterval.Quarterly)
-        )
+        updateEvents(calendarRepository.getEvents(eventsInterval = EventsInterval.Quarterly))
     })
-    fun myCalendarViewState() = _myCalendarViewState.asStateFlow()
+    override fun getViewState() = _myCalendarViewState.asStateFlow()
 
-    fun isBack2TodayAvailable(): Boolean = myCalendarViewState().value.todaysDate.date.isDatesEqual().not()
+    override fun isBack2TodayAvailable(): Boolean = getViewState().value.todaysDate.date.isDatesEqual().not()
 
-    fun onDateSelected(selectedDate: MyDate) {
+    override fun onDateSelected(selectedDate: MyDate) {
         viewModelScope.launch {
             val oldDate = _myCalendarViewState.value.selectedDate
             if (selectedDate.date.isFromThisMonth().not()) {
@@ -67,9 +66,9 @@ class MyCalendarVM @Inject constructor(
         emit(calendarRepository.fetchEvents(givenDate, eventsInterval))
     }
 
-    fun onNextMonthClicked() {
+    override fun onNextMonthClicked() {
         viewModelScope.launch {
-            val currentDate = MyDate(myCalendarViewState().value.todaysDate.date.plusMonths(1))
+            val currentDate = MyDate(getViewState().value.todaysDate.date.plusMonths(1))
             _myCalendarViewState.update {
                 it.copy(
                     todaysDate = currentDate,
@@ -88,9 +87,9 @@ class MyCalendarVM @Inject constructor(
         }
     }
 
-    fun onPreviousMonthClicked() {
+    override fun onPreviousMonthClicked() {
         viewModelScope.launch {
-            val currentDate = MyDate(myCalendarViewState().value.todaysDate.date.minusMonths(1))
+            val currentDate = MyDate(getViewState().value.todaysDate.date.minusMonths(1))
             _myCalendarViewState.update {
                 it.copy(
                     todaysDate = currentDate,
@@ -109,7 +108,7 @@ class MyCalendarVM @Inject constructor(
         }
     }
 
-    fun onBackToTodayClicked() {
+    override fun onBackToTodayClicked() {
         viewModelScope.launch {
             val currentDate = getTodaysMyDate()
             _myCalendarViewState.update {

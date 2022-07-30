@@ -9,17 +9,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.eky.evimiss.ui.custom.calendar.MyCalendar
+import com.eky.evimiss.ui.custom.calendar.viewmodel.BaseCalendarVM
+import com.eky.evimiss.ui.custom.calendar.viewmodel.PreviewCalendarVM
 import com.eky.evimiss.ui.screens.main.MainScaffold
 
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(calendarVM: BaseCalendarVM) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        MyCalendar()
+        MyCalendar(viewModel = calendarVM)
     }
 }
 
@@ -27,6 +32,10 @@ fun CalendarScreen() {
 @Composable
 fun DefaultPreview() {
     MainScaffold(
-        content = { CalendarScreen() }
+        content = {
+            CalendarScreen(
+                calendarVM = PreviewCalendarVM()
+            )
+        }
     )
 }
