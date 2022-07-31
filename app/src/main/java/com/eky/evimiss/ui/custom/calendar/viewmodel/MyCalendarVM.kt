@@ -24,8 +24,6 @@ class MyCalendarVM @Inject constructor(
     })
     override fun getViewState() = _myCalendarViewState.asStateFlow()
 
-    override fun isBack2TodayAvailable(): Boolean = getViewState().value.todaysDate.date.isDatesEqual().not()
-
     override fun onDateSelected(selectedDate: MyDate) {
         viewModelScope.launch {
             val oldDate = _myCalendarViewState.value.selectedDate
@@ -110,6 +108,8 @@ class MyCalendarVM @Inject constructor(
 
     override fun onBackToTodayClicked() {
         viewModelScope.launch {
+            if (getViewState().value.todaysDate.date.isDatesEqual())
+                return@launch
             val currentDate = getTodaysMyDate()
             _myCalendarViewState.update {
                 it.copy(

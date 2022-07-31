@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 abstract class BaseCalendarVM : ViewModel() {
 
     abstract fun getViewState(): StateFlow<MyCalendarViewState>
-    abstract fun isBack2TodayAvailable(): Boolean
     abstract fun onDateSelected(selectedDate: MyDate)
     abstract fun onNextMonthClicked()
     abstract fun onPreviousMonthClicked()

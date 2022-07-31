@@ -1,11 +1,11 @@
 package com.eky.evimiss.ui.custom.calendar
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +34,7 @@ import com.eky.evimiss.data.model.MyDate
 import com.eky.evimiss.ui.custom.calendar.viewmodel.PreviewCalendarVM
 import com.eky.evimiss.ui.theme.secondary
 import com.eky.evimiss.ui.theme.secondaryLight
+import com.eky.evimiss.ui.theme.white
 import com.eky.evimiss.utils.*
 import org.threeten.bp.LocalDate
 
@@ -58,12 +58,13 @@ fun MyCalendar(viewModel: BaseCalendarVM) {
         )
         DateDetails(
             viewState = viewState,
-            isBack2TodayAvailable = viewModel::isBack2TodayAvailable,
             onBackToTodayClicked = viewModel::onBackToTodayClicked
         )
         CalEvents(viewState = viewState)
         Spacer(
-            modifier = Modifier.fillMaxWidth().height(80.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
         )
     }
 }
@@ -75,9 +76,7 @@ fun CalHeader(
     onNextMonthClicked: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = 4.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -131,7 +130,7 @@ fun CalHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp),
+                .padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -178,7 +177,7 @@ fun CalDay(
             Modifier
                 .weight(1f)
                 .clickableWithoutRipple {
-                   onDateSelected(myDate)
+                    onDateSelected(myDate)
                 }
         },
         contentAlignment = Alignment.Center
@@ -195,14 +194,13 @@ fun CalDay(
         if ((myDate.date.isToday() && viewState.value.selectedDate.date.isToday()) || viewState.value.selectedDate.date.isEqual(myDate.date))
             SelectDate()
         if (myDate.hasEvents)
-            MarkTheDate(boxScope = this, myDate = myDate)
+            DayEventDots(boxScope = this, myDate = myDate)
     }
 }
 
 @Composable
 fun DateDetails(
     viewState: State<MyCalendarViewState>,
-    isBack2TodayAvailable: () -> Boolean,
     onBackToTodayClicked: () -> Unit
 ) {
     Column(
@@ -283,21 +281,37 @@ fun SelectDate() {
 }
 
 @Composable
-fun MarkTheDate(boxScope: BoxScope, myDate: MyDate) {
-    Column(
+fun DayEventDots(boxScope: BoxScope, myDate: MyDate) {
+    var eventSize = myDate.events.size
+    eventSize = if (eventSize > 10) 10 else eventSize
+    val columns = if (eventSize < 6) 1 else 2
+    val firstColumnSize = if (eventSize > 5) 5 else eventSize
+    val secondColumnSize = eventSize - firstColumnSize
+
+    Row(
         modifier = with(boxScope) {
             Modifier
                 .align(Alignment.TopEnd)
-                .padding(5.dp)
-        }
+                .padding(end = 6.dp)
+        },
     ) {
-        for (i in 1..myDate.events.take(3).size)
+        if (columns != 1)
+            EventDotColumn(eventCount = secondColumnSize)
+        EventDotColumn(eventCount = firstColumnSize)
+    }
+}
+
+@Composable
+fun EventDotColumn(eventCount: Int) {
+    Column {
+        repeat(eventCount) {
             Canvas(
                 Modifier
-                    .size(6.dp)
-                    .padding(1.dp)) {
+                    .size(5.dp)
+                    .padding(bottom = 1.dp)) {
                 drawCircle(color = secondary)
             }
+        }
     }
 }
 

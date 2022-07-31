@@ -15,8 +15,6 @@ class PreviewCalendarVM : BaseCalendarVM() {
     override fun getViewState(): StateFlow<MyCalendarViewState> =
         MutableStateFlow(MyCalendarViewState()).asStateFlow()
 
-    override fun isBack2TodayAvailable(): Boolean = true
-
     override fun onDateSelected(selectedDate: MyDate) = Unit
 
     override fun onNextMonthClicked() = Unit
