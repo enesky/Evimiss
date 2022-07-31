@@ -27,6 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eky.evimiss.R
 import com.eky.evimiss.ui.custom.calendar.viewmodel.BaseCalendarVM
 import com.eky.evimiss.data.model.MyDate
@@ -40,9 +42,10 @@ import org.threeten.bp.LocalDate
  * Created by Enes Kamil YILMAZ on 04/09/2021
  */
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun MyCalendar(viewModel: BaseCalendarVM) {
-    val viewState = viewModel.getViewState().collectAsState()
+    val viewState = viewModel.getViewState().collectAsStateWithLifecycle()
     Column {
         CalHeader(
             viewState = viewState,
