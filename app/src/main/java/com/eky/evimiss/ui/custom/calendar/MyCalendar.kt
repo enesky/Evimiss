@@ -208,14 +208,18 @@ fun DateDetails(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp), color = Color.White, thickness = 0.5.dp)
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            color = Color.White,
+            thickness = 0.5.dp
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -224,7 +228,14 @@ fun DateDetails(
                 color = Color.White,
                 style = MaterialTheme.typography.body1
             )
-            TodayButton(isBack2TodayAvailable, onBackToTodayClicked)
+            Icon(
+                modifier = Modifier.clickable {
+                    onBackToTodayClicked()
+                },
+                painter = painterResource(id = R.drawable.ic_today),
+                contentDescription = "today",
+                tint = white
+            )
         }
         Divider(modifier = Modifier.fillMaxWidth(), color = Color.White, thickness = 0.5.dp)
     }
@@ -247,34 +258,6 @@ fun CalEvents(viewState: State<MyCalendarViewState>) {
             items = viewState.value.eventMap[selectedDate] ?: mutableListOf()
         ) { eventEntity ->
             EventItem(eventEntity)
-        }
-    }
-}
-
-@Composable
-fun TodayButton(
-    isBack2TodayAvailable: () -> Boolean,
-    onBackToTodayClicked: () -> Unit
-) {
-    AnimatedVisibility(visible = isBack2TodayAvailable()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickableWithoutRipple { onBackToTodayClicked() }
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 4.dp),
-                painter = painterResource(id = R.drawable.ic_today),
-                contentDescription = "today",
-                tint = secondaryLight
-            )
-            Text(
-                text = stringResource(R.string.label_today),
-                textAlign = TextAlign.Center,
-                color = secondaryLight,
-                style = MaterialTheme.typography.body2
-            )
         }
     }
 }
