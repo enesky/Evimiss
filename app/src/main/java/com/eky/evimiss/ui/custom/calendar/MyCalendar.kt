@@ -199,6 +199,65 @@ fun CalDay(
 }
 
 @Composable
+fun DayEventDots(boxScope: BoxScope, myDate: MyDate) {
+    var eventSize = myDate.events.size
+    when {
+        eventSize == 0 -> return
+        eventSize > 10 -> eventSize = 10
+    }
+    val columns = if (eventSize < 6) 1 else 2
+    val firstColumnSize = if (eventSize > 5) 5 else eventSize
+    val secondColumnSize = eventSize - firstColumnSize
+
+    Row(
+        modifier = with(boxScope) {
+            Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = 6.dp)
+        },
+    ) {
+        if (columns != 1)
+            EventDotColumn(eventCount = secondColumnSize)
+        EventDotColumn(eventCount = firstColumnSize)
+    }
+}
+
+@Composable
+fun EventDotColumn(eventCount: Int) {
+    Column {
+        repeat(eventCount) {
+            Canvas(
+                Modifier
+                    .size(5.dp)
+                    .padding(bottom = 1.dp)) {
+                drawCircle(color = secondary)
+            }
+        }
+    }
+}
+
+@Composable
+fun CalEvents(viewState: State<MyCalendarViewState>) {
+    val listState = rememberLazyListState()
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        val selectedDate = viewState.value.selectedDate.date
+        items(
+            items = viewState.value.eventMap[selectedDate] ?: mutableListOf()
+        ) { eventEntity ->
+            EventItem(eventEntity)
+        }
+    }
+}
+
+@Composable
 fun DateDetails(
     viewState: State<MyCalendarViewState>,
     onBackToTodayClicked: () -> Unit
@@ -240,27 +299,6 @@ fun DateDetails(
 }
 
 @Composable
-fun CalEvents(viewState: State<MyCalendarViewState>) {
-    val listState = rememberLazyListState()
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        val selectedDate = viewState.value.selectedDate.date
-        items(
-            items = viewState.value.eventMap[selectedDate] ?: mutableListOf()
-        ) { eventEntity ->
-            EventItem(eventEntity)
-        }
-    }
-}
-
-@Composable
 fun SelectDate() {
     val animateFloat = remember { Animatable(0f) }
     LaunchedEffect(animateFloat) {
@@ -277,41 +315,6 @@ fun SelectDate() {
             useCenter = false,
             style = Stroke(width = 1.25f.dp.toPx())
         )
-    }
-}
-
-@Composable
-fun DayEventDots(boxScope: BoxScope, myDate: MyDate) {
-    var eventSize = myDate.events.size
-    eventSize = if (eventSize > 10) 10 else eventSize
-    val columns = if (eventSize < 6) 1 else 2
-    val firstColumnSize = if (eventSize > 5) 5 else eventSize
-    val secondColumnSize = eventSize - firstColumnSize
-
-    Row(
-        modifier = with(boxScope) {
-            Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 6.dp)
-        },
-    ) {
-        if (columns != 1)
-            EventDotColumn(eventCount = secondColumnSize)
-        EventDotColumn(eventCount = firstColumnSize)
-    }
-}
-
-@Composable
-fun EventDotColumn(eventCount: Int) {
-    Column {
-        repeat(eventCount) {
-            Canvas(
-                Modifier
-                    .size(5.dp)
-                    .padding(bottom = 1.dp)) {
-                drawCircle(color = secondary)
-            }
-        }
     }
 }
 
