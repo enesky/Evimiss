@@ -32,6 +32,4 @@ data class MyCalendarViewState(
             for (myDate in weekList.second)
                 myDate.events = eventMap[myDate.date] ?: mutableListOf()
     }
-
-
 }

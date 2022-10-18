@@ -64,7 +64,7 @@ fun MyCalendar(viewModel: BaseCalendarVM) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
+                .height(CalendarValues.Paddings.calendarWithBottomNavBarBottomMargin)
         )
     }
 }
